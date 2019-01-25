@@ -13,6 +13,7 @@ import (
 /*
 #cgo CFLAGS: -I./
 #cgo LDFLAGS: -L./ -lsysconfig
+#include <stdlib.h>
 #include "sysconfig.h"
 */
 import "C"
@@ -147,16 +148,14 @@ func getDevType() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getDevType((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getDevName() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getDevName((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getDevLabel() string {
@@ -167,16 +166,14 @@ func getVendor() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getDevVendor((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getDevStatus() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getDevStatus((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getDevMac() string {
@@ -187,8 +184,7 @@ func getDevCurrentTime() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getTime((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 	//return time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05")
 }
 
@@ -196,13 +192,12 @@ func getDevStartTime() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getUPTime((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getDevRunTimes() string {
 	times := C.getRunTime()
-	return strconv.Itoa(times)
+	return strconv.Itoa(int(times))
 	//return execBashCmd(`awk -F. '{print $1}' /proc/uptime`)
 }
 
@@ -218,8 +213,7 @@ func getSoftPatch() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getSoftwareVer((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getAppPatch() string {
@@ -230,8 +224,7 @@ func getHardwareVer() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
 	outlen := C.getHardwareVer((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
+	return string(buf[:outlen])
 }
 
 func getCommunicationInterface() string {
@@ -256,7 +249,7 @@ func getDevTemperature() string {
 
 func getOsCPURate() string {
 	rate := C.getCpuOccupy()
-	return strconv.Itoa(rate)
+	return strconv.Itoa(int(rate))
 }
 
 func getOsMemoryRate() string {
