@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>TTU 运维管理</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <script type="text/javascript" src="/js/jquery.js" ></script>
+</head>
+<body>
+<div class="head">
+    <div class="head_left">欢迎登陆TTU运维管理</div>
+    <div class="head_middle">TTU运维管理</div>
+    <div class="head_right">欢迎登陆，管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a></div>
+</div>
+<div class="content">
+    <div class="left_menu">
+        <div class="labeled"><a id="basic" class="labeled" href="#">基本信息</a></div>
+        <div class="label"><a id="config" class="label" href="#">配置信息</a></div>
+        <div class="label"><a id="status" class="label" href="#">状态信息</a></div>
+    </div>
+    <div class="right_content">
+        <table>
+            <tr>
+                <td>设备类型：</td><td>{{.DevType}}</td>
+            </tr>
+            <tr>
+                <td>设备名称：</td><td>{{.DevName}}</td>
+            </tr>
+            <tr>
+                <td>电子标签：</td><td>{{.DevLabel}}</td>
+            </tr>
+            <tr>
+                <td>厂商信息：</td><td>{{.Vendor}}</td>
+            </tr>
+            <tr>
+                <td>设备状态：</td><td>{{.DevStatus}}</td>
+            </tr>
+            <tr>
+                <td>设备MAC：</td><td>{{.DevMac}}</td>
+            </tr>
+            <tr>
+                <td>设备当前时间：</td><td>{{.DevCurTime}}</td>
+            </tr>
+            <tr>
+                <td>设备启动时间：</td><td>{{.DevStartTime}}</td>
+            </tr>
+            <tr>
+                <td>设备运行时长：</td><td>{{.DevRunTimes}}</td>
+            </tr>
+            <tr>
+                <td>设备内存：</td><td>{{.DevMem}}</td>
+            </tr>
+            <tr>
+                <td>设备内部存储：</td><td>{{.DevDisk}}</td>
+            </tr>
+            <tr>
+                <td>设备软件及补丁版本信息：</td><td>{{.DevSoftPatch}}</td>
+            </tr>
+            <tr>
+                <td>APP机器补丁版本信息：</td><td>{{.AppPatch}}</td>
+            </tr>
+            <tr>
+                <td>硬件版本信息：</td><td>{{.Hardware}}</td>
+            </tr>
+            <tr>
+                <td>设备上行通信接口信息：</td><td>{{.DevCommunication}}</td>
+            </tr>
+            <tr>
+                <td>平台软件版本信息：</td><td>{{.Platform}}</td>
+            </tr>   
+            <tr>
+                <td>kubernetes版本信息：</td><td>{{.K8sInfo}}</td>
+            </tr>
+            <tr>
+                <td>容器(Docker)版本信息</td><td>{{.DockerInfo}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/js/base.js" ></script>
+</html>

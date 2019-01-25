@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>TTU 运维管理</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <script type="text/javascript" src="/js/jquery.js" ></script>
+</head>
+<body>
+<div class="head">
+    <div class="head_left">欢迎登陆TTU运维管理</div>
+    <div class="head_middle">TTU运维管理</div>
+    <div class="head_right">欢迎登陆，管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a></div>
+</div>
+<div class="content">
+    <div class="left_menu">
+        <div class="label"><a id="basic" class="label" href="#">基本信息</a></div>
+        <div class="labeled"><a id="config" class="labeled" href="#">配置信息</a></div>
+        <div class="label"><a id="status" class="label" href="#">状态信息</a></div>
+    </div>
+    <div class="right_content"> 
+        <form data-type="formAction" action="/ajax/config" form-redirect="/config/index">
+            <table>
+                <tr>
+                    <td>主站IPv4地址:</td><td><input class="input_ipv4" type="text" name="IPv4" id="IPv4" value={{.MainStationIPv4}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>端口:</td><td><input class="input_port" type="text" name="IPv4Port" id="IPv4Port" value={{.MainStationIPv4Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>主站IPv6地址:</td><td><input class="input_ipv6" type="text" name="IPv6" id="IPv6" value={{.MainStationIPv6}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                    <td>端口:</td><td><input class="input_port" type="text" name="IPv6Port" id="IPv6Port" value={{.MainStationIPv6Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>备用主站IPv4地址:</td><td><input class="input_ipv4" type="text" name="BackIPv4" id="BackIPv4" value={{.BackMainStationIPv4}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>端口:</td><td><input class="input_port" type="text" name="BackIPv4Port" id="BackIPv4Port" value={{.BackMainStationIPv4Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>备用主站IPv6地址:</td><td><input class="input_ipv6" type="text" name="BackIPv6" id="BackIPv6" value={{.BackMainStationIPv6}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                    <td>端口:</td><td><input class="input_port" type="text" name="BackIPv6Port" id="BackIPv6Port" value={{.BackMainStationIPv6Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>系统CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="SysCPURateUpper" id="SysCPURateUpper" value={{.SysCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>系统内存使用率上限阈值：</td><td><input class="input_other" type="text" name="SysMemRateUpper" id="SysMemRateUpper" value={{.SysMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" ></input></td>
+                </tr>
+                <tr>
+                    <td>系统存储占用率上限阈值：</td><td><input class="input_other" type="text" name="SysDiskRateUpper" id="SysDiskRateUpper" value={{.SysDiskRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>系统监控判定窗口时间：</td><td><input class="input_other" type="text" name="SysMonitorWndTime" id="SysMonitorWndTime" value={{.SysMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>容器CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerCPURateUpper" id="ContainerCPURateUpper" value={{.ContainerCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>容器内存使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerMemRateUpper" id="ContainerMemRateUpper" value={{.ContainerMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>容器监控判定窗口时间：</td><td><input class="input_other" type="text" name="ContainerMonitorWndTime" id="ContainerMonitorWndTime" value={{.ContainerMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>APP的CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="AppCPURateUpper" id="AppCPURateUpper" value={{.AppCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>APP的内存使用率上限阈值：</td><td><input class="input_other" type="text" name="AppMemRateUpper" id="AppMemRateUpper" value={{.AppMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>APP监控判定窗口时间：</td><td><input class="input_other" type="text" name="AppMonitorWndTime" id="AppMonitorWndTime" value={{.AppMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>温度上限阈值：</td><td><input class="input_other" type="text" name="TempUpper" id="TempUpper" value={{.TempUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>温度超上限判定窗口期：</td><td><input class="input_other" type="text" name="TempUpperWnd" id="TempUpperWnd" value={{.TempUpperWnd}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr class="tr_button">
+                    <td></td><td><input type="submit" value="修改" style="width:80px;height:25px"></input></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/js/base.js" ></script>
+</html>
