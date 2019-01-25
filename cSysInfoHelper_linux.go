@@ -249,17 +249,17 @@ func getDevTemperature() string {
 
 func getOsCPURate() string {
 	rate := C.getCpuOccupy()
-	return "%" + strconv.Itoa(int(rate))
+	return strconv.Itoa(int(rate)) + "%"
 }
 
 func getOsMemoryRate() string {
 	rate := C.getRamOccupy()
-	return "%" + strconv.Itoa(int(rate))
+	return strconv.Itoa(int(rate)) + "%"
 }
 
 func getOsDiskRate() string {
 	rate := C.getDiskOccupy()
-	return "%" + strconv.Itoa(int(rate))
+	return strconv.Itoa(int(rate)) + "%"
 }
 
 func getContainerCPURate() string {
