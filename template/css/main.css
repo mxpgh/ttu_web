@@ -217,3 +217,15 @@ a:link,a:visited {
 .tr_button {
     height: 80px;
 }
+
+.devstatus_td_bule {
+    background-color: #00FF00;
+}
+
+.devstatus_td_red {
+    background-color: #FF0000;
+}
+
+.devstatus_td_yellow {
+    background-color: #FFFF00;
+}
