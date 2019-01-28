@@ -35,36 +35,61 @@ func execBashCmd(bash string) string {
 	return string(out)
 }
 
-func validIP(ip string) bool {
+func validIP(ip, tip string, w http.ResponseWriter) bool {
 	a := net.ParseIP(ip)
 	if nil == a {
+		OutputJson(w, 0, tip, nil)
 		return false
 	}
 	return true
 }
 
-func validPort(port string) bool {
+func validPort(port, tip string, w http.ResponseWriter) bool {
 	match, err := regexp.MatchString("^[0-9]*$", port)
 	if err != nil || false == match {
+		OutputJson(w, 0, tip, nil)
 		return false
 	}
 
 	i, err := strconv.Atoi(port)
 	if err != nil {
+		OutputJson(w, 0, tip, nil)
 		return false
 	}
 	if i < 0 || i > 65535 {
+		OutputJson(w, 0, tip, nil)
 		return false
 	}
 
 	return true
 }
 
-func validValue(val string) bool {
+func validValue(val, tip string, w http.ResponseWriter) bool {
 	if val != "" {
 		if isOK, _ := regexp.MatchString(`^[0-9]\d*|0\.\d*[0-9]\d*$`, val); isOK {
 			return true
 		}
 	}
+	OutputJson(w, 0, tip, nil)
 	return false
+}
+
+func validPercent(val, tip string, w http.ResponseWriter) bool {
+	if val != "" {
+		if isOK, _ := regexp.MatchString(`^[0-9]\d*|0\.\d*[0-9]\d*$`, val); !isOK {
+			OutputJson(w, 0, tip, nil)
+			return false
+		}
+	}
+	f, err := strconv.ParseFloat(val, 32)
+	if err != nil {
+		OutputJson(w, 0, tip, nil)
+		return false
+	}
+
+	if f < 0.00 || f > 100.00 {
+		OutputJson(w, 0, tip, nil)
+		return false
+	}
+	return true
 }

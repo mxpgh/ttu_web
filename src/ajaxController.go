@@ -80,78 +80,95 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	}
 
 	ipv4 := r.FormValue("IPv4")
-	if !validIP(ipv4) {
-		OutputJson(w, 0, "主站IPv4地址错误", nil)
+	if !validIP(ipv4, "主站IPv4地址错误", w) {
 		return
 	}
 	ipv4Port := r.FormValue("IPv4Port")
-	_ = ipv4Port
-	if !validPort(ipv4Port) {
-		OutputJson(w, 0, "主站IPv4端口错误", nil)
+	if !validPort(ipv4Port, "主站IPv4端口错误", w) {
 		return
 	}
+
 	ipv6 := r.FormValue("IPv6")
-	_ = ipv6
-	if !validIP(ipv6) {
-		OutputJson(w, 0, "主站IPv6地址错误", nil)
+	if !validIP(ipv6, "主站IPv6地址错误", w) {
 		return
 	}
 	ipv6Port := r.FormValue("IPv6Port")
-	_ = ipv6Port
-	if !validPort(ipv6Port) {
-		OutputJson(w, 0, "主站IPv6端口错误", nil)
+	if !validPort(ipv6Port, "主站IPv6端口错误", w) {
 		return
 	}
+
 	backipv4 := r.FormValue("BackIPv4")
-	_ = backipv4
-	if !validIP(backipv4) {
-		OutputJson(w, 0, "备份主站IPv4地址错误", nil)
+	if !validIP(backipv4, "备份主站IPv4地址错误", w) {
 		return
 	}
 	backipv4Port := r.FormValue("BackIPv4Port")
-	_ = backipv4Port
-	if !validPort(backipv4Port) {
-		OutputJson(w, 0, "备份主站IPv4端口错误", nil)
+	if !validPort(backipv4Port, "备份主站IPv4端口错误", w) {
 		return
 	}
+
 	backipv6 := r.FormValue("BackIPv6")
-	_ = backipv6
-	if !validIP(backipv6) {
-		OutputJson(w, 0, "备份主站IPv6地址错误", nil)
+	if !validIP(backipv6, "备份主站IPv6地址错误", w) {
 		return
 	}
 	backipv6Port := r.FormValue("BackIPv6Port")
-	_ = backipv6Port
-	if !validPort(backipv6Port) {
-		OutputJson(w, 0, "备份主站IPv6端口错误", nil)
+	if !validPort(backipv6Port, "备份主站IPv6端口错误", w) {
 		return
 	}
+
 	sysCPURateUpper := r.FormValue("SysCPURateUpper")
-	_ = sysCPURateUpper
-	if !validValue(sysCPURateUpper) {
-		OutputJson(w, 0, "CPU 使用率上限格式错误", nil)
+	if !validPercent(sysCPURateUpper, "CPU 使用率上限设置错误", w) {
 		return
 	}
+
 	sysMemRateUpper := r.FormValue("SysMemRateUpper")
-	_ = sysMemRateUpper
+	if !validPercent(sysMemRateUpper, "内存使用上限设置错误", w) {
+		return
+	}
+
 	sysDiskRateUpper := r.FormValue("SysDiskRateUpper")
-	_ = sysDiskRateUpper
+	if !validPercent(sysDiskRateUpper, "内部存储使用上限设置错误", w) {
+		return
+	}
+
 	sysMonitorWndTime := r.FormValue("SysMonitorWndTime")
-	_ = sysMonitorWndTime
+	if !validValue(sysMonitorWndTime, "系统监控判断窗口时间设置错误", w) {
+		return
+	}
+
 	containerCPURateUpper := r.FormValue("ContainerCPURateUpper")
-	_ = containerCPURateUpper
+	if !validPercent(containerCPURateUpper, "容器CPU使用率上限设置错误", w) {
+		return
+	}
+
 	containerMemRateUpper := r.FormValue("ContainerMemRateUpper")
-	_ = containerMemRateUpper
+	if !validPercent(containerMemRateUpper, "容器内存使用率上限错误", w) {
+		return
+	}
+
 	appCPURateUpper := r.FormValue("AppCPURateUpper")
-	_ = appCPURateUpper
+	if !validPercent(appCPURateUpper, "APP CPU使用率上限设置错误", w) {
+		return
+	}
+
 	appMemRateUpper := r.FormValue("AppMemRateUpper")
-	_ = appMemRateUpper
+	if !validPercent(appMemRateUpper, "APP 内存使用率上限设置错误", w) {
+		return
+	}
+
 	appMonitorWndTime := r.FormValue("AppMonitorWndTime")
-	_ = appMonitorWndTime
+	if !validValue(appMonitorWndTime, "APP 监控判定窗口时间设置错误", w) {
+		return
+	}
+
 	tempUpper := r.FormValue("TempUpper")
-	_ = tempUpper
+	if !validValue(tempUpper, "温度上限阀值设置错误", w) {
+		return
+	}
+
 	tempUpperWnd := r.FormValue("TempUpperWnd")
-	_ = tempUpperWnd
+	if !validValue(tempUpperWnd, "温度上限判定窗口期设置错误", w) {
+		return
+	}
 	log.Println("ConfigAction: ", ipv4)
 	OutputJson(w, 0, "修改成功", nil)
 

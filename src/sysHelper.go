@@ -46,7 +46,7 @@ func getVendor() string {
 }
 
 func getDevStatus() string {
-	return "running"
+	return "正常状态"
 }
 
 func getDevMac() string {
