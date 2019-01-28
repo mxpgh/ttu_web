@@ -33,10 +33,17 @@
                 <td>厂商信息：</td><td>{{.Vendor}}</td>
             </tr>
             <tr>
-                <td>设备状态：</td><td>{{.DevStatus}}</td>
+                <td>设备状态：</td>
+                {{if or (eq .DevStatus "正常状态") (eq .DevStatus "闲置设备")}}
+                    <td class="devstatus_td_bule">{{.DevStatus}}</td>
+                {{else if or (eq .DevStatus "停用") (eq .DevStatus "待维修")}}
+                    <td class="devstatus_td_red">{{.DevStatus}}</td>
+                {{else}}
+                    <td class="devstatus_td_yellow">{{.DevStatus}}</td>
+                {{end}}
             </tr>
             <tr>
-                <td>设备MAC：</td><td>{{.DevMac}}</td>
+                <td>设备MAC地址：</td><td>{{.DevMac}}</td>
             </tr>
             <tr>
                 <td>设备当前时间：</td><td>{{.DevCurTime}}</td>
@@ -54,10 +61,10 @@
                 <td>设备内部存储：</td><td>{{.DevDisk}}</td>
             </tr>
             <tr>
-                <td>设备软件及补丁版本信息：</td><td>{{.DevSoftPatch}}</td>
+                <td>设备软件及其补丁版本信息：</td><td>{{.DevSoftPatch}}</td>
             </tr>
             <tr>
-                <td>APP机器补丁版本信息：</td><td>{{.AppPatch}}</td>
+                <td>APP及其补丁版本信息：</td><td>{{.AppPatch}}</td>
             </tr>
             <tr>
                 <td>硬件版本信息：</td><td>{{.Hardware}}</td>
