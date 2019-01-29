@@ -22,7 +22,7 @@
         <form data-type="formAction" action="/ajax/config" form-redirect="/config/index">
             <table>
                 <tr>
-                    <td>主站IPv4地址:</td><td><input class="input_ipv4" type="text" name="IPv4" id="IPv4" value={{.MainStationIPv4}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td style="width:182px">主站IPv4地址:</td><td><input class="input_ipv4" type="text" name="IPv4" id="IPv4" value={{.MainStationIPv4}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                     <td>端口:</td><td><input class="input_port" type="text" name="IPv4Port" id="IPv4Port" value={{.MainStationIPv4Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
                 </tr>
                 <tr>
@@ -37,6 +37,8 @@
                     <td>备用主站IPv6地址:</td><td><input class="input_ipv6" type="text" name="BackIPv6" id="BackIPv6" value={{.BackMainStationIPv6}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
                     <td>端口:</td><td><input class="input_port" type="text" name="BackIPv6Port" id="BackIPv6Port" value={{.BackMainStationIPv6Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
                 </tr>
+            </table>
+            <table>
                 <tr>
                     <td>系统CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="SysCPURateUpper" id="SysCPURateUpper" value={{.SysCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
@@ -68,13 +70,18 @@
                     <td>APP监控判定窗口时间：</td><td><input class="input_other" type="text" name="AppMonitorWndTime" id="AppMonitorWndTime" value={{.AppMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>温度上限阈值：</td><td><input class="input_other" type="text" name="TempUpper" id="TempUpper" value={{.TempUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>温度上限阈值：</td>
+                    <td><input class="input_other" type="text" name="TempLower" id="TempLower" value={{.TempLower}} input onkeyup="value=value.replace(/[^\-\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input>℃</td>
+                    <td style="width:5px">~</td>
+                    <td><input class="input_other" type="text" name="TempUpper" id="TempLower" value={{.TempUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input>℃</td>
                 </tr>
                 <tr>
                     <td>温度超上限判定窗口期：</td><td><input class="input_other" type="text" name="TempUpperWnd" id="TempUpperWnd" value={{.TempUpperWnd}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
+            </table>
+            <table>
                 <tr class="tr_button">
-                    <td></td><td><input type="submit" value="修改" style="width:80px;height:25px"></input></td>
+                    <td style="width:180px"></td><td><input type="submit" value="修改" style="width:80px;height:25px"></input></td>
                 </tr>
             </table>
         </form>
