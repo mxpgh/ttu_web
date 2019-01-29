@@ -12,119 +12,14 @@ import (
 
 /*
 #cgo CFLAGS: -I./
-#cgo LDFLAGS: -L./ -lsysconfig
+#cgo LDFLAGS: -L./ -lsysconfig -lyaml-cpp
 #include <stdlib.h>
 #include "sysconfig.h"
 */
 import "C"
 
-/*
-//cpu using rate
-func getCPURate() int {
-	return C.getCpuOccupy()
-}
-
-//memory using rate
-func getMemRate() int {
-	return C.getRamOccupy()
-}
-
-//disk using rate
-func getDiskRate() int {
-	return C.getDiskOccupy()
-}
-
-//device run times second
-func getDeviceRunTimes() uint32 {
-	return C.getRunTime()
-}
-*/
-//system start time
-/*
-func getSysStartTime() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getUPTime((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//system current time
-func getSysCurTime() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getTime((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-*/
-
-//set system current time
-func setSysCurTime(tm string) error {
-	cs := C.CString(tm)
-	ret := C.setTime(cs)
-	_ = ret
-	C.free(unsafe.Pointer(cs))
-	return nil
-}
-
-/*
-//device type
-func getDevType() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getDevType((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//device name
-func getDevName() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getDevName((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//device status
-func getDevStatus() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getDevStatus((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//device vendor
-func getDevVendor() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getDevVendor((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//hardware version
-func getHardwareVer() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getHardwareVer((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-
-//platform software version
-func getSoftwareVer() string {
-	inlen := C.int(128)
-	buf := make([]byte, 128)
-	outlen := C.getSoftwareVer((*C.char)(unsafe.Pointer(&buf[0])), inlen)
-	_ = outlen
-	return string(buf)
-}
-*/
-
 var (
+	gCPURate          string
 	gk8sVer           string
 	gContaninerCPU    string
 	gContaninerMemory string
@@ -140,6 +35,11 @@ func timeTask() {
 	for {
 		gk8sVer = execBashCmd("kubelet --version")
 		gContaninerCPU, gContaninerMemory = getDockerStat()
+
+		{
+			rate := C.getCpuOccupy()
+			gCPURate = strconv.Itoa(int(rate)) + "%"
+		}
 		time.Sleep(5 * time.Second)
 	}
 }
@@ -197,16 +97,20 @@ func getDevStartTime() string {
 
 func getDevRunTimes() string {
 	times := C.getRunTime()
-	return strconv.Itoa(int(times))
+	return strconv.Itoa(int(times)) + " s"
 	//return execBashCmd(`awk -F. '{print $1}' /proc/uptime`)
 }
 
 func getDevMemory() string {
-	return execBashCmd(`free -m |grep "Mem:" | awk '{print $2}'`) + "M"
+	mem := C.getRamSize()
+	return strconv.Itoa(int(mem)) + " KB"
+	//return execBashCmd(`free -m |grep "Mem:" | awk '{print $2}'`) + "M"
 }
 
 func getDevDisk() string {
-	return execBashCmd(`df -h / | awk '{print $2}' | sed -n '2p'`)
+	disk := C.getDiskSize()
+	return strconv.FormatFloat(float64(disk), 'f', 2, 64) + " GB"
+	//return execBashCmd(`df -h / | awk '{print $2}' | sed -n '2p'`)
 }
 
 func getSoftPatch() string {
@@ -244,12 +148,14 @@ func getDockerInfo() string {
 }
 
 func getDevTemperature() string {
-	return "10"
+	temp := C.getTemperature()
+	return strconv.Itoa(int(temp)) + " ℃"
 }
 
 func getOsCPURate() string {
-	rate := C.getCpuOccupy()
-	return strconv.Itoa(int(rate)) + "%"
+	return gCPURate
+	//rate := C.getCpuOccupy()
+	//return strconv.Itoa(int(rate)) + "%"
 }
 
 func getOsMemoryRate() string {
@@ -263,19 +169,19 @@ func getOsDiskRate() string {
 }
 
 func getContainerCPURate() string {
-	return gContaninerCPU
+	return gContaninerCPU + "%"
 }
 
 func getContainerMemoryRate() string {
-	return gContaninerMemory
+	return gContaninerMemory + "%"
 }
 
 func getAppCPURate() string {
-	return "0.1"
+	return "0.1%"
 }
 
 func getAppMemoryRate() string {
-	return "0.2"
+	return "0.2%"
 }
 
 func getRTCFault() string {
@@ -404,28 +310,64 @@ func getBackMainStationIPv6Port() string {
 }
 
 ////////////////////////////////////////////
+//set system current time
+func setSysCurTime(tm string) error {
+	cs := C.CString(tm)
+	ret := C.setTime(cs)
+	_ = ret
+	C.free(unsafe.Pointer(cs))
+	return nil
+}
+
 func setSysCPURateUpper(rate string) error {
+	upper, err := strconv.Atoi(rate)
+	if err != nil {
+		return err
+	}
+	ret := C.setCpuThreshold(C.int(upper))
+	_ = ret
 	return nil
 }
 
 func getSysCPURateUpper() string {
-	return "80"
+	upper := C.int(0)
+	ret := C.getCpuThreshold((*C.int)(unsafe.Pointer(&upper)))
+	_ = ret
+	return strconv.Itoa(int(upper))
 }
 
 func setSysMemoryRateUpper(rate string) error {
+	upper, err := strconv.Atoi(rate)
+	if err != nil {
+		return err
+	}
+	ret := C.setRamThreshold(C.int(upper))
+	_ = ret
 	return nil
 }
 
 func getSysMemoryRateUpper() string {
-	return "80"
+	upper := C.int(0)
+	ret := C.getRamThreshold((*C.int)(unsafe.Pointer(&upper)))
+	_ = ret
+	return strconv.Itoa(int(upper))
 }
 
 func setSysDiskRateUpper(rate string) error {
+	upper, err := strconv.Atoi(rate)
+	if err != nil {
+		return err
+	}
+	ret := C.setDiskThreshold(C.int(upper))
+	_ = ret
 	return nil
 }
 
 func getSysDiskRateUpper() string {
-	return "80"
+	upper := C.int(0)
+	ret := C.getDiskThreshold((*C.int)(unsafe.Pointer(&upper)))
+	_ = ret
+	return strconv.Itoa(int(upper))
 }
 
 ///////////////////////////////////////////////
@@ -487,12 +429,26 @@ func getAppMonitorWndTime() string {
 }
 
 /////////////////////////////////////////////
-func setTemperatureUpper(upper string) error {
+func setTemperatureUpper(lower, upper string) error {
+	tempUpper, err := strconv.Atoi(upper)
+	if err != nil {
+		return err
+	}
+	tempLower, err := strconv.Atoi(lower)
+	if err != nil {
+		return err
+	}
+	ret := C.setTempThreshold(C.int(tempUpper), C.int(tempLower))
+	_ = ret
 	return nil
 }
 
-func getTemperatureUpper() string {
-	return "40"
+func getTemperatureUpper() (lower, upper string) {
+	tempUpper := C.int(0)
+	tempLower := C.int(0)
+	ret := C.getTempThreshold((*C.int)(unsafe.Pointer(&tempUpper)), (*C.int)(unsafe.Pointer(&tempLower)))
+	_ = ret
+	return strconv.Itoa(int(tempLower)), strconv.Itoa(int(tempUpper))
 }
 
 func setTemperatureUpperWnd(wnd string) error {

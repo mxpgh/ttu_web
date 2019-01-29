@@ -342,12 +342,12 @@ func getAppMonitorWndTime() string {
 }
 
 /////////////////////////////////////////////
-func setTemperatureUpper(upper string) error {
+func setTemperatureUpper(lower, upper string) error {
 	return nil
 }
 
-func getTemperatureUpper() string {
-	return "40"
+func getTemperatureUpper() (lower, upper string) {
+	return "-40", "40"
 }
 
 func setTemperatureUpperWnd(wnd string) error {

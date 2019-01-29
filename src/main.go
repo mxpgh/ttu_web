@@ -66,9 +66,14 @@ func validPort(port, tip string, w http.ResponseWriter) bool {
 
 func validValue(val, tip string, w http.ResponseWriter) bool {
 	if val != "" {
-		if isOK, _ := regexp.MatchString(`^[0-9]\d*|0\.\d*[0-9]\d*$`, val); isOK {
+		_, err := strconv.Atoi(val)
+		if err == nil {
 			return true
 		}
+
+		//if isOK, _ := regexp.MatchString(`^[0-9]\d*|0\.\d*[0-9]\d*$`, val); isOK {
+		//	return true
+		//}
 	}
 	OutputJson(w, 0, tip, nil)
 	return false

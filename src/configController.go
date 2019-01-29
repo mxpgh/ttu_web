@@ -26,6 +26,7 @@ type Config struct {
 	AppCPURateUpper         string
 	AppMemRateUpper         string
 	AppMonitorWndTime       string
+	TempLower               string
 	TempUpper               string
 	TempUpperWnd            string
 }
@@ -38,6 +39,7 @@ func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		log.Println(err)
 	}
+	tempLower, tempUpper := getTemperatureUpper()
 	t.Execute(w, &Config{user,
 		getMainStationIPv4(),
 		getMainStationIPv4Port(),
@@ -57,7 +59,8 @@ func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request
 		getAppCPURateUpper(),
 		getAppMemoryRateUpper(),
 		getAppMonitorWndTime(),
-		getTemperatureUpper(),
+		tempLower,
+		tempUpper,
 		getTemperatureUpperWnd()})
 
 }
