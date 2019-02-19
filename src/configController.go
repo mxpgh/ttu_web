@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	UserName                string
+	SysTime                 string
 	MainStationIPv4         string
 	MainStationIPv4Port     string
 	MainStationIPv6         string
@@ -40,7 +41,9 @@ func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request
 		log.Println(err)
 	}
 	tempLower, tempUpper := getTemperatureUpper()
-	t.Execute(w, &Config{user,
+	t.Execute(w, &Config{
+		user,
+		getCurrentTime(),
 		getMainStationIPv4(),
 		getMainStationIPv4Port(),
 		getMainStationIPv6(),

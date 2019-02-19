@@ -8,6 +8,7 @@ import (
 
 type Basic struct {
 	UserName         string
+	SysTime          string
 	DevType          string
 	DevName          string
 	DevLabel         string
@@ -37,7 +38,9 @@ func (this *basicController) IndexAction(w http.ResponseWriter, r *http.Request,
 		log.Println(err)
 	}
 
-	t.Execute(w, &Basic{user,
+	t.Execute(w, &Basic{
+		user,
+		getCurrentTime(),
 		getDevType(),
 		getDevName(),
 		getDevLabel(),

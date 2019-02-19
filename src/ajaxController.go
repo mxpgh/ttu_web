@@ -1,9 +1,12 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 
 	//  "github.com/ziutek/mymysql/mysql"
 	//  _ "github.com/ziutek/mymysql/thrsafe"
@@ -33,15 +36,15 @@ func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	admin_name := r.FormValue("admin_name")
-	admin_password := r.FormValue("admin_password")
+	userName := strings.TrimSpace(r.FormValue("admin_name"))
+	userPassword := r.FormValue("admin_password")
 
-	if admin_name == "" || admin_name != adminUser {
+	if userName == "" || userName != adminUser {
 		OutputJson(w, 0, "用户名错误", nil)
 		return
 	}
 
-	if admin_password == "" || admin_password != adminPasswd {
+	if userPassword == "" || userPassword != adminPasswd {
 		OutputJson(w, 0, "密码错误", nil)
 		return
 	}
@@ -213,6 +216,48 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	OutputJson(w, 0, "修改成功", nil)
 
 	return
+}
+
+func (this *ajaxController) UploadAction(w http.ResponseWriter, r *http.Request) {
+	//把上传的文件存储在内存和临时文件中
+	err := r.ParseMultipartForm(128 << 20)
+	if err != nil {
+		OutputJson(w, 0, "参数错误", nil)
+		return
+	}
+
+	token := r.FormValue("token")
+	if token != "" {
+		//验证token的合法性
+		log.Println("token: ", token)
+	} else {
+		//不存在token报错
+		log.Println("token is nil or empty")
+	}
+
+	//获取文件句柄，然后对文件进行存储等处理
+	file, handler, err := r.FormFile("uploadfile")
+	if err != nil {
+		log.Println("form file err: ", err)
+		OutputJson(w, 0, "上传错误", nil)
+		return
+	}
+
+	defer file.Close()
+	//fmt.Fprintf(w, "%v", handler.Header)
+	//创建上传的目的文件
+	f, err := os.OpenFile("d:\\tmp\\"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		log.Println("open file err: ", err)
+		OutputJson(w, 0, "上传错误", nil)
+		return
+	}
+
+	defer f.Close()
+	//拷贝文件
+	io.Copy(f, file)
+
+	OutputJson(w, 0, "上传成功", nil)
 }
 
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {

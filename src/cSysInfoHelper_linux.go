@@ -19,10 +19,10 @@ import (
 import "C"
 
 var (
-	gCPURate          string
-	gk8sVer           string
-	gContaninerCPU    string
-	gContaninerMemory string
+	gCPURate   string
+	gk8sVer    string
+	gAppCPU    string
+	gAppMemory string
 )
 
 type dockerStat struct {
@@ -34,7 +34,7 @@ type dockerStat struct {
 func timeTask() {
 	for {
 		gk8sVer = execBashCmd("kubelet --version")
-		gContaninerCPU, gContaninerMemory = getDockerStat()
+		gAppCPU, gAppMemory = getDockerStat()
 
 		{
 			rate := C.getCpuOccupy()
@@ -97,7 +97,8 @@ func getDevStartTime() string {
 
 func getDevRunTimes() string {
 	times := C.getRunTime()
-	return strconv.Itoa(int(times)) + " s"
+	return fmtTimes(int(times))
+	//return strconv.Itoa(int(times)) + " s"
 	//return execBashCmd(`awk -F. '{print $1}' /proc/uptime`)
 }
 
@@ -136,7 +137,7 @@ func getCommunicationInterface() string {
 }
 
 func getPlatformInfo() string {
-	return execBashCmd(`uname -a`)
+	return execBashCmd(`uname -oi`)
 }
 
 func getK8sInfo() string {
@@ -144,7 +145,7 @@ func getK8sInfo() string {
 }
 
 func getDockerInfo() string {
-	return execBashCmd(`docker -v | awk '{print $3}'`)
+	return execBashCmd(`docker -v | awk '{print $3}' | awk '{split($0,b,",");print b[1]}'`)
 }
 
 func getDevTemperature() string {
@@ -169,19 +170,19 @@ func getOsDiskRate() string {
 }
 
 func getContainerCPURate() string {
-	return gContaninerCPU + "%"
+	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print$3}'`) + "%"
 }
 
 func getContainerMemoryRate() string {
-	return gContaninerMemory + "%"
+	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print$4}'`) + "%"
 }
 
 func getAppCPURate() string {
-	return "0.1%"
+	return gAppCPU + "%"
 }
 
 func getAppMemoryRate() string {
-	return "0.2%"
+	return gAppMemory + "%"
 }
 
 func getRTCFault() string {

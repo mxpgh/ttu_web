@@ -8,6 +8,7 @@ import (
 
 type Status struct {
 	UserName                   string
+	SysTime                    string
 	DevCurTime                 string
 	DevTemp                    string
 	OsCPURate                  string
@@ -34,6 +35,7 @@ func (this *statusController) IndexAction(w http.ResponseWriter, r *http.Request
 	}
 	t.Execute(w, &Status{
 		user,
+		getCurrentTime(),
 		getDevCurrentTime(),
 		getDevTemperature(),
 		getOsCPURate(),

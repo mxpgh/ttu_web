@@ -1,12 +1,16 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"log"
 	"net"
 	"net/http"
 	"os/exec"
 	"regexp"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func main() {
@@ -21,6 +25,7 @@ func main() {
 	http.HandleFunc("/basic/", basicHandler)
 	http.HandleFunc("/config/", configHandler)
 	http.HandleFunc("/status/", statusHandler)
+	http.HandleFunc("/upload/", uploadHandler)
 	http.HandleFunc("/", NotFoundHandler)
 	log.Println("Start ttu_web server: listen port 8888")
 	log.Fatal(http.ListenAndServe(":8888", nil))
@@ -32,7 +37,7 @@ func execBashCmd(bash string) string {
 	if err != nil {
 		return ""
 	}
-	return string(out)
+	return strings.TrimSpace(string(out))
 }
 
 func validIP(ip, tip string, w http.ResponseWriter) bool {
@@ -97,4 +102,37 @@ func validPercent(val, tip string, w http.ResponseWriter) bool {
 		return false
 	}
 	return true
+}
+
+func getCurrentTime() string {
+	return time.Unix(time.Now().Unix(), 0).Format("2006-01-02 15:04:05")
+}
+
+func fmtTimes(sec int) string {
+	days := sec / (24 * 3600)
+	hours := sec % (24 * 3600) / 3600
+	minutes := sec % 3600 / 60
+	seconds := sec % 60
+	str := ""
+	if days > 0 {
+		str += strconv.Itoa(days) + "天"
+	}
+	if hours > 0 {
+		str += strconv.Itoa(hours) + "小时"
+	}
+	if minutes > 0 {
+		str += strconv.Itoa(minutes) + "分"
+	}
+	if seconds > 0 {
+		str += strconv.Itoa(seconds) + "秒"
+	}
+	return str
+}
+
+func genToken() string {
+	time := time.Now().Unix()
+	h := md5.New()
+	h.Write([]byte(strconv.FormatInt(time, 10)))
+	token := hex.EncodeToString(h.Sum(nil))
+	return token
 }
