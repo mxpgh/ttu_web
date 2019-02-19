@@ -103,7 +103,16 @@ a.labeled:link,a.labeled:visited {
     margin-top:100px;
 }
 
-
+.welcome2 {
+    font-size: 30px;
+    position: fixed;
+    width: 300px;
+    height: 100px;
+    top:50%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left:-100px ;
+}
 
 /*������ԭ�����е�*/
 .left {
@@ -199,7 +208,7 @@ a:link,a:visited {
 }
 
 .input_ipv4 {
-    width: 105px;
+    width: 180px;
 }
 
 .input_ipv6 {
@@ -229,3 +238,15 @@ a:link,a:visited {
 .devstatus_td_yellow {
     background-color: #FFFF00;
 }
+
+.login {
+    position: fixed;
+    width: 300px;
+    height: 150px;
+    top:50%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left:-100px ;
+}
+
+       
