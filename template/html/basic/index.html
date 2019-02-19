@@ -8,15 +8,19 @@
 </head>
 <body>
 <div class="head">
-    <div class="head_left">欢迎登陆TTU运维管理</div>
+    <div class="head_left"></div>
     <div class="head_middle">TTU运维管理</div>
-    <div class="head_right">欢迎登陆，管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a></div>
+    <div class="head_right">
+        管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a><br/>
+        {{.SysTime}} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
 </div>
 <div class="content">
     <div class="left_menu">
         <div class="labeled"><a id="basic" class="labeled" href="#">基本信息</a></div>
         <div class="label"><a id="config" class="label" href="#">配置信息</a></div>
         <div class="label"><a id="status" class="label" href="#">状态信息</a></div>
+        <div class="label"><a id="upload" class="label" href="#">升级管理</a></div>
     </div>
     <div class="right_content">
         <table>
@@ -79,7 +83,7 @@
                 <td>kubernetes版本信息：</td><td>{{.K8sInfo}}</td>
             </tr>
             <tr>
-                <td>容器(Docker)版本信息</td><td>{{.DockerInfo}}</td>
+                <td>容器(Docker)版本信息：</td><td>{{.DockerInfo}}</td>
             </tr>
         </table>
     </div>

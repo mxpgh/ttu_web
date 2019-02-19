@@ -9,15 +9,19 @@
 </head>
 <body>
 <div class="head">
-    <div class="head_left">欢迎登陆TTU运维管理</div>
+    <div class="head_left"></div>
     <div class="head_middle">TTU运维管理</div>
-    <div class="head_right">欢迎登陆，管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a></div>
+    <div class="head_right">
+        管理员：{{.UserName}} | <a id="logout" href="#">退出系统</a><br/>
+        {{.SysTime}} &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
 </div>
 <div class="content">
     <div class="left_menu">
         <div class="label"><a id="basic" class="label" href="#">基本信息</a></div>
         <div class="label"><a id="config" class="label" href="#">配置信息</a></div>
         <div class="labeled"><a id="status" class="labeled" href="#">状态信息</a></div>
+        <div class="label"><a id="upload" class="label" href="#">升级管理</a></div>
     </div>
     <div class="right_content">
         <table>
@@ -34,7 +38,7 @@
                 <td>操作系统内存占用率：</td><td>{{.OsMemRate}}</td>
             </tr>
             <tr>
-                <td>内部存储占用量，占用率：</td><td>{{.OsDiskRate}}</td>
+                <td>内部存储占用率：</td><td>{{.OsDiskRate}}</td>
             </tr>
             <tr>
                 <td>容器CPU占用率：</td><td>{{.ContainerCPURate}}</td>
@@ -49,13 +53,13 @@
                 <td>APP的内存占用率：</td><td>{{.AppMemRate}}</td>
             </tr>
             <tr>
-                <td>RTC故障（状态量）</td><td>{{.RTCFault}}</td>
+                <td>RTC故障(状态量)：</td><td>{{.RTCFault}}</td>
             </tr>
             <tr>
-                <td>温感故障（状态量）：</td><td>{{.TempDetectFault}}</td>
+                <td>温感故障(状态量)：</td><td>{{.TempDetectFault}}</td>
             </tr>
             <tr>
-                <td>外围硬件检测故障（状态量）：</td><td>{{.PeripheralHardwareFault}}</td>
+                <td>外围硬件检测故障(状态量)：</td><td>{{.PeripheralHardwareFault}}</td>
             </tr> 
             <tr>
                 <td>容器列表及容器内软件版本号：</td><td>{{.ContainerList}}</td>
