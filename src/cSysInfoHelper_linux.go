@@ -513,7 +513,7 @@ func setTemperatureThreshold(lower, upper string) error {
 func getTemperatureThreshold() (lower, upper string) {
 	tempUpper := C.int(0)
 	tempLower := C.int(0)
-	ret := C.getTempThreshold((*C.int)(unsafe.Pointer(&tempUpper)), (*C.int)(unsafe.Pointer(&tempLower)))
+	ret := C.getTempThreshold(&tempUpper, &tempLower)
 	_ = ret
 	return strconv.Itoa(int(tempLower)), strconv.Itoa(int(tempUpper))
 }
