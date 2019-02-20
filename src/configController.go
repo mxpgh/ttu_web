@@ -45,7 +45,7 @@ func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request
 	ipv4, ipv4Port := getMainStationIPv4()
 	ipv6, ipv6Port := getMainStationIPv6()
 	backIpv4, backIpv4Port := getBackMainStationIPv4()
-	backIpv6, backIpv6Port := getBackMainStationIPv4()
+	backIpv6, backIpv6Port := getBackMainStationIPv6()
 
 	t.Execute(w, &Config{
 		user,
