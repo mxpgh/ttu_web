@@ -44,31 +44,31 @@
             </table>
             <table>
                 <tr>
-                    <td>系统CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="SysCPURateUpper" id="SysCPURateUpper" value={{.SysCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>系统CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="SysCPURateUpper" id="SysCPURateUpper" value={{.SysCPURateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>系统内存使用率上限阈值：</td><td><input class="input_other" type="text" name="SysMemRateUpper" id="SysMemRateUpper" value={{.SysMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" ></input></td>
+                    <td>系统内存使用率上限阈值：</td><td><input class="input_other" type="text" name="SysMemRateUpper" id="SysMemRateUpper" value={{.SysMemRateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" ></input></td>
                 </tr>
                 <tr>
-                    <td>系统存储占用率上限阈值：</td><td><input class="input_other" type="text" name="SysDiskRateUpper" id="SysDiskRateUpper" value={{.SysDiskRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>系统存储占用率上限阈值：</td><td><input class="input_other" type="text" name="SysDiskRateUpper" id="SysDiskRateUpper" value={{.SysDiskRateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
                     <td>系统监控判定窗口时间：</td><td><input class="input_other" type="text" name="SysMonitorWndTime" id="SysMonitorWndTime" value={{.SysMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>容器CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerCPURateUpper" id="ContainerCPURateUpper" value={{.ContainerCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>容器CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerCPURateUpper" id="ContainerCPURateUpper" value={{.ContainerCPURateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>容器内存使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerMemRateUpper" id="ContainerMemRateUpper" value={{.ContainerMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>容器内存使用率上限阈值：</td><td><input class="input_other" type="text" name="ContainerMemRateUpper" id="ContainerMemRateUpper" value={{.ContainerMemRateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
                     <td>容器监控判定窗口时间：</td><td><input class="input_other" type="text" name="ContainerMonitorWndTime" id="ContainerMonitorWndTime" value={{.ContainerMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>APP的CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="AppCPURateUpper" id="AppCPURateUpper" value={{.AppCPURateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>APP的CPU使用率上限阈值：</td><td><input class="input_other" type="text" name="AppCPURateUpper" id="AppCPURateUpper" value={{.AppCPURateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
-                    <td>APP的内存使用率上限阈值：</td><td><input class="input_other" type="text" name="AppMemRateUpper" id="AppMemRateUpper" value={{.AppMemRateUpper}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                    <td>APP的内存使用率上限阈值：</td><td><input class="input_other" type="text" name="AppMemRateUpper" id="AppMemRateUpper" value={{.AppMemRateUpper}} maxlength=3 min=0 max=100 size=4 input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
                 <tr>
                     <td>APP监控判定窗口时间：</td><td><input class="input_other" type="text" name="AppMonitorWndTime" id="AppMonitorWndTime" value={{.AppMonitorWndTime}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
