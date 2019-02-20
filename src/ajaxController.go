@@ -87,63 +87,59 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	if !validIP(ipv4, "主站IPv4地址错误", w) {
 		return
 	}
-	setMainStationIPv4(ipv4)
 	ipv4Port := r.FormValue("IPv4Port")
 	if !validPort(ipv4Port, "主站IPv4端口错误", w) {
 		return
 	}
-	setMainStationIPv4Port(ipv4Port)
+	setMainStationIPv4(ipv4, ipv4Port)
 
 	ipv6 := r.FormValue("IPv6")
 	if !validIP(ipv6, "主站IPv6地址错误", w) {
 		return
 	}
-	setMainStationIPv6(ipv6)
 	ipv6Port := r.FormValue("IPv6Port")
 	if !validPort(ipv6Port, "主站IPv6端口错误", w) {
 		return
 	}
-	setMainStationIPv6Port(ipv6Port)
+	setMainStationIPv6(ipv6, ipv6Port)
 
 	backipv4 := r.FormValue("BackIPv4")
 	if !validIP(backipv4, "备份主站IPv4地址错误", w) {
 		return
 	}
-	setBackMainStationIPv4(backipv4)
 	backipv4Port := r.FormValue("BackIPv4Port")
 	if !validPort(backipv4Port, "备份主站IPv4端口错误", w) {
 		return
 	}
-	setBackMainStationIPv4Port(backipv4Port)
+	setBackMainStationIPv4(backipv4, backipv4Port)
 
 	backipv6 := r.FormValue("BackIPv6")
 	if !validIP(backipv6, "备份主站IPv6地址错误", w) {
 		return
 	}
-	setBackMainStationIPv6(backipv6)
 	backipv6Port := r.FormValue("BackIPv6Port")
 	if !validPort(backipv6Port, "备份主站IPv6端口错误", w) {
 		return
 	}
-	setBackMainStationIPv6Port(backipv6Port)
+	setBackMainStationIPv6(backipv6, backipv6Port)
 
 	sysCPURateUpper := r.FormValue("SysCPURateUpper")
 	if !validPercent(sysCPURateUpper, "CPU 使用率上限设置错误", w) {
 		return
 	}
-	setSysCPURateUpper(sysCPURateUpper)
+	setSysCPURateThreshold(sysCPURateUpper)
 
 	sysMemRateUpper := r.FormValue("SysMemRateUpper")
 	if !validPercent(sysMemRateUpper, "内存使用上限设置错误", w) {
 		return
 	}
-	setSysMemoryRateUpper(sysMemRateUpper)
+	setSysMemoryRateThreshold(sysMemRateUpper)
 
 	sysDiskRateUpper := r.FormValue("SysDiskRateUpper")
 	if !validPercent(sysDiskRateUpper, "内部存储使用上限设置错误", w) {
 		return
 	}
-	setSysDiskRateUpper(sysDiskRateUpper)
+	setSysDiskRateThreshold(sysDiskRateUpper)
 
 	sysMonitorWndTime := r.FormValue("SysMonitorWndTime")
 	if !validValue(sysMonitorWndTime, "系统监控判断窗口时间设置错误", w) {
@@ -155,25 +151,25 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	if !validPercent(containerCPURateUpper, "容器CPU使用率上限设置错误", w) {
 		return
 	}
-	setContainerCPURateUpper(containerCPURateUpper)
+	setContainerCPURateThreshold(containerCPURateUpper)
 
 	containerMemRateUpper := r.FormValue("ContainerMemRateUpper")
 	if !validPercent(containerMemRateUpper, "容器内存使用率上限错误", w) {
 		return
 	}
-	setContainerCPURateUpper(containerMemRateUpper)
+	setContainerCPURateThreshold(containerMemRateUpper)
 
 	appCPURateUpper := r.FormValue("AppCPURateUpper")
 	if !validPercent(appCPURateUpper, "APP CPU使用率上限设置错误", w) {
 		return
 	}
-	setAppCPURateUpper(appCPURateUpper)
+	setAppCPURateThreshold(appCPURateUpper)
 
 	appMemRateUpper := r.FormValue("AppMemRateUpper")
 	if !validPercent(appMemRateUpper, "APP 内存使用率上限设置错误", w) {
 		return
 	}
-	setAppMemoryRateUpper(appMemRateUpper)
+	setAppMemoryRateThreshold(appMemRateUpper)
 
 	appMonitorWndTime := r.FormValue("AppMonitorWndTime")
 	if !validValue(appMonitorWndTime, "APP 监控判定窗口时间设置错误", w) {
@@ -204,13 +200,13 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 		OutputJson(w, 0, "温度下限阀值错误", nil)
 		return
 	}
-	setTemperatureUpper(tempLower, tempUpper)
+	setTemperatureThreshold(tempLower, tempUpper)
 
 	tempUpperWnd := r.FormValue("TempUpperWnd")
 	if !validValue(tempUpperWnd, "温度上限判定窗口期设置错误", w) {
 		return
 	}
-	setTemperatureUpperWnd(tempLower)
+	setTemperatureThresholdWnd(tempLower)
 
 	log.Println("ConfigAction: ", ipv4)
 	OutputJson(w, 0, "修改成功", nil)

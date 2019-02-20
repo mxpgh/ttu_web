@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -149,7 +150,11 @@ func getDockerInfo() string {
 }
 
 func getDevTemperature() string {
-	temp := C.getTemperature()
+	temp := C.int(0)
+	ret := C.getTemperature(&temp)
+	if 0 == ret {
+		return "传感器故障"
+	}
 	return strconv.Itoa(int(temp)) + " ℃"
 }
 
@@ -186,7 +191,11 @@ func getAppMemoryRate() string {
 }
 
 func getRTCFault() string {
-	return ""
+	ret := C.getRtcStatus()
+	if 0 == ret {
+		return "异常"
+	}
+	return "正常"
 }
 
 func getTemperatureDetectFault() string {
@@ -245,69 +254,84 @@ func getDockerStat() (cpu, mem string) {
 }
 
 //////////////////////////////////////////
-func setMainStationIPv4(ip string) error {
+func setMainStationIPv4(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(0), C.int(4), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set main station ipv4 error")
+	}
 	return nil
 }
 
-func getMainStationIPv4() string {
-	return "192.168.1.0"
+func getMainStationIPv4() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 16)
+	ret := C.getServer(C.int(0), C.int(4), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+	return byteToString(cIp), uint16(cPort)
 }
 
-func setMainStationIPv4Port(port string) error {
+func setBackMainStationIPv4(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(1), C.int(4), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set back main station ipv4 error")
+	}
 	return nil
 }
 
-func getMainStationIPv4Port() string {
-	return "6443"
-}
+func getBackMainStationIPv4() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 16)
+	ret := C.getServer(C.int(1), C.int(4), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
 
-func setBackMainStationIPv4(ip string) error {
-	return nil
-}
-
-func getBackMainStationIPv4() string {
-	return "192.168.1.0"
-}
-
-func setBackMainStationIPv4Port(port string) error {
-	return nil
-}
-
-func getBackMainStationIPv4Port() string {
-	return "6443"
+	return byteToString(cIp), uint16(cPort)
 }
 
 ///////////////////////////////////////////
-func setMainStationIPv6(ip string) error {
+func setMainStationIPv6(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(0), C.int(6), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set main station ipv6 error")
+	}
 	return nil
 }
 
-func getMainStationIPv6() string {
-	return "fe80::c10c:9d86:382f:4797"
+func getMainStationIPv6() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 128)
+	ret := C.getServer(C.int(0), C.int(6), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+
+	return byteToString(cIp), uint16(cPort)
 }
 
-func setMainStationIPv6Port(port string) error {
+func setBackMainStationIPv6(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(1), C.int(6), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set back main station ipv6 error")
+	}
 	return nil
 }
 
-func getMainStationIPv6Port() string {
-	return "6443"
-}
+func getBackMainStationIPv6() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 128)
+	ret := C.getServer(C.int(1), C.int(6), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
 
-func setBackMainStationIPv6(ip string) error {
-	return nil
-}
-
-func getBackMainStationIPv6() string {
-	return "fe80::c10c:9d86:382f:4797"
-}
-
-func setBackMainStationIPv6Port(port string) error {
-	return nil
-}
-
-func getBackMainStationIPv6Port() string {
-	return "6443"
+	return byteToString(cIp), uint16(cPort)
 }
 
 ////////////////////////////////////////////
@@ -320,7 +344,7 @@ func setSysCurTime(tm string) error {
 	return nil
 }
 
-func setSysCPURateUpper(rate string) error {
+func setSysCPURateThreshold(rate string) error {
 	upper, err := strconv.Atoi(rate)
 	if err != nil {
 		return err
@@ -330,14 +354,14 @@ func setSysCPURateUpper(rate string) error {
 	return nil
 }
 
-func getSysCPURateUpper() string {
+func getSysCPURateThreshold() string {
 	upper := C.int(0)
 	ret := C.getCpuThreshold((*C.int)(unsafe.Pointer(&upper)))
 	_ = ret
 	return strconv.Itoa(int(upper))
 }
 
-func setSysMemoryRateUpper(rate string) error {
+func setSysMemoryRateThreshold(rate string) error {
 	upper, err := strconv.Atoi(rate)
 	if err != nil {
 		return err
@@ -347,14 +371,14 @@ func setSysMemoryRateUpper(rate string) error {
 	return nil
 }
 
-func getSysMemoryRateUpper() string {
+func getSysMemoryRateThreshold() string {
 	upper := C.int(0)
 	ret := C.getRamThreshold((*C.int)(unsafe.Pointer(&upper)))
 	_ = ret
 	return strconv.Itoa(int(upper))
 }
 
-func setSysDiskRateUpper(rate string) error {
+func setSysDiskRateThreshold(rate string) error {
 	upper, err := strconv.Atoi(rate)
 	if err != nil {
 		return err
@@ -364,7 +388,7 @@ func setSysDiskRateUpper(rate string) error {
 	return nil
 }
 
-func getSysDiskRateUpper() string {
+func getSysDiskRateThreshold() string {
 	upper := C.int(0)
 	ret := C.getDiskThreshold((*C.int)(unsafe.Pointer(&upper)))
 	_ = ret
@@ -373,64 +397,106 @@ func getSysDiskRateUpper() string {
 
 ///////////////////////////////////////////////
 func setSysMonitorWndTime(wnd string) error {
+	tm, _ := strconv.Atoi(wnd)
+	ret := C.setAlarmInterval(C.int(tm))
+	_ = ret
 	return nil
 }
 
 func getSysMonitorWndTime() string {
-	return "10"
+	tm := C.int(0)
+	ret := C.getAlarmInterval(&tm)
+	_ = ret
+	return strconv.Itoa(int(tm))
 }
 
-func setContainerCPURateUpper(rate string) error {
+func setContainerCPURateThreshold(rate string) error {
+	rt, _ := strconv.Atoi(rate)
+	ret := C.setMonParameter(C.docker, C.cpu, C.int(rt))
+	_ = ret
 	return nil
 }
 
-func getContainerCPURateUpper() string {
-	return "80"
+func getContainerCPURateThreshold() string {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.docker, C.cpu, &rt)
+	_ = ret
+	return strconv.Itoa(int(rt))
 }
 
-func setContainerMemoryRateUpper(rate string) error {
+func setContainerMemoryRateThreshold(rate string) error {
+	rt, _ := strconv.Atoi(rate)
+	ret := C.setMonParameter(C.docker, C.ram, C.int(rt))
+	_ = ret
 	return nil
 }
 
-func getContainerMemoryRateUpper() string {
-	return "80"
+func getContainerMemoryRateThreshold() string {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.docker, C.ram, &rt)
+	_ = ret
+	return strconv.Itoa(int(rt))
 }
 
 func setContainerMonitorWndTime(wnd string) error {
+	tm, _ := strconv.Atoi(wnd)
+	ret := C.setMonParameter(C.docker, C.interval, C.int(tm))
+	_ = ret
 	return nil
 }
 
 func getContainerMonitorWndTime() string {
-	return "5"
+	tm := C.int(0)
+	ret := C.getMonParameter(C.docker, C.interval, &tm)
+	_ = ret
+	return strconv.Itoa(int(tm))
 }
 
 /////////////////////////////////////////////
-func setAppCPURateUpper(rate string) error {
+func setAppCPURateThreshold(rate string) error {
+	rt, _ := strconv.Atoi(rate)
+	ret := C.setMonParameter(C.app, C.cpu, C.int(rt))
+	_ = ret
 	return nil
 }
 
-func getAppCPURateUpper() string {
-	return "80"
+func getAppCPURateThreshold() string {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.app, C.cpu, &rt)
+	_ = ret
+	return strconv.Itoa(int(rt))
 }
 
-func setAppMemoryRateUpper(rate string) error {
+func setAppMemoryRateThreshold(rate string) error {
+	rt, _ := strconv.Atoi(rate)
+	ret := C.setMonParameter(C.app, C.ram, C.int(rt))
+	_ = ret
 	return nil
 }
 
-func getAppMemoryRateUpper() string {
-	return "80"
+func getAppMemoryRateThreshold() string {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.app, C.ram, &rt)
+	_ = ret
+	return strconv.Itoa(int(rt))
 }
 
 func setAppMonitorWndTime(wnd string) error {
+	tm, _ := strconv.Atoi(wnd)
+	ret := C.setMonParameter(C.app, C.interval, C.int(tm))
+	_ = ret
 	return nil
 }
 
 func getAppMonitorWndTime() string {
-	return "5"
+	tm := C.int(0)
+	ret := C.getMonParameter(C.app, C.ram, &tm)
+	_ = ret
+	return strconv.Itoa(int(tm))
 }
 
 /////////////////////////////////////////////
-func setTemperatureUpper(lower, upper string) error {
+func setTemperatureThreshold(lower, upper string) error {
 	tempUpper, err := strconv.Atoi(upper)
 	if err != nil {
 		return err
@@ -444,7 +510,7 @@ func setTemperatureUpper(lower, upper string) error {
 	return nil
 }
 
-func getTemperatureUpper() (lower, upper string) {
+func getTemperatureThreshold() (lower, upper string) {
 	tempUpper := C.int(0)
 	tempLower := C.int(0)
 	ret := C.getTempThreshold((*C.int)(unsafe.Pointer(&tempUpper)), (*C.int)(unsafe.Pointer(&tempLower)))
@@ -452,10 +518,16 @@ func getTemperatureUpper() (lower, upper string) {
 	return strconv.Itoa(int(tempLower)), strconv.Itoa(int(tempUpper))
 }
 
-func setTemperatureUpperWnd(wnd string) error {
+func setTemperatureThresholdWnd(wnd string) error {
+	tm, _ := strconv.Atoi(wnd)
+	ret := C.setTempInterval(C.int(tm))
+	_ = ret
 	return nil
 }
 
-func getTemperatureUpperWnd() string {
-	return "10"
+func getTemperatureThresholdWnd() string {
+	tm := C.int(0)
+	ret := C.getTempInterval(&tm)
+	_ = ret
+	return strconv.Itoa(int(tm))
 }

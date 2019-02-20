@@ -136,3 +136,12 @@ func genToken() string {
 	token := hex.EncodeToString(h.Sum(nil))
 	return token
 }
+
+func byteToString(c []byte) string {
+	for i := 0; i < len(c); i++ {
+		if c[i] == 0 {
+			return string(c[0:i])
+		}
+	}
+	return string(c)
+}

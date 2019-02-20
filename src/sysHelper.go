@@ -193,93 +193,64 @@ func getDockerStat() (cpu, mem string) {
 }
 
 //////////////////////////////////////////
-func setMainStationIPv4(ip string) error {
+func setMainStationIPv4(ip string, port string) error {
 	return nil
 }
 
-func getMainStationIPv4() string {
-	return "192.168.1.0"
+func getMainStationIPv4() (ip string, port uint16) {
+	buf := make([]byte, 16)
+	log.Println(buf)
+	log.Println(byteToString(buf))
+	return byteToString(buf), 6443
 }
 
-func setMainStationIPv4Port(port string) error {
+func setBackMainStationIPv4(ip string, port string) error {
 	return nil
 }
 
-func getMainStationIPv4Port() string {
-	return "6443"
-}
-
-func setBackMainStationIPv4(ip string) error {
-	return nil
-}
-
-func getBackMainStationIPv4() string {
-	return "192.168.1.0"
-}
-
-func setBackMainStationIPv4Port(port string) error {
-	return nil
-}
-
-func getBackMainStationIPv4Port() string {
-	return "6443"
+func getBackMainStationIPv4() (ip string, port uint16) {
+	return "192.168.1.0", 6443
 }
 
 ///////////////////////////////////////////
-func setMainStationIPv6(ip string) error {
+func setMainStationIPv6(ip string, port string) error {
 	return nil
 }
 
-func getMainStationIPv6() string {
-	return "fe80::c10c:9d86:382f:4797"
+func getMainStationIPv6() (ip string, port uint16) {
+	return "fe80::c10c:9d86:382f:4797", 6443
 }
 
-func setMainStationIPv6Port(port string) error {
+func setBackMainStationIPv6(ip string, port string) error {
 	return nil
 }
 
-func getMainStationIPv6Port() string {
-	return "6443"
-}
-
-func setBackMainStationIPv6(ip string) error {
-	return nil
-}
-
-func getBackMainStationIPv6() string {
-	return "fe80::c10c:9d86:382f:4797"
-}
-
-func setBackMainStationIPv6Port(port string) error {
-	return nil
-}
-
-func getBackMainStationIPv6Port() string {
-	return "6443"
+func getBackMainStationIPv6() (ip string, port uint16) {
+	return "fe80::c10c:9d86:382f:4797", 6443
 }
 
 ////////////////////////////////////////////
-func setSysCPURateUpper(rate string) error {
+func setSysCPURateThreshold(rate string) error {
 	return nil
 }
 
-func getSysCPURateUpper() string {
+func getSysCPURateThreshold() string {
 	return "80"
 }
 
-func setSysMemoryRateUpper(rate string) error {
+func setSysMemoryRateThreshold(rate string) error {
 	return nil
 }
 
-func getSysMemoryRateUpper() string {
+func getSysMemoryRateThreshold() string {
 	return "80"
 }
 
-func setSysDiskRateUpper(rate string) error {
+func setSysDiskRateThreshold(rate string) error {
 	return nil
 }
 
-func getSysDiskRateUpper() string {
+func getSysDiskRateThreshold() string {
 	return "80"
 }
 
@@ -292,19 +263,19 @@ func getSysMonitorWndTime() string {
 	return "10"
 }
 
-func setContainerCPURateUpper(rate string) error {
+func setContainerCPURateThreshold(rate string) error {
 	return nil
 }
 
-func getContainerCPURateUpper() string {
+func getContainerCPURateThreshold() string {
 	return "80"
 }
 
-func setContainerMemoryRateUpper(rate string) error {
+func setContainerMemoryRateThreshold(rate string) error {
 	return nil
 }
 
-func getContainerMemoryRateUpper() string {
+func getContainerMemoryRateThreshold() string {
 	return "80"
 }
 
@@ -317,19 +288,19 @@ func getContainerMonitorWndTime() string {
 }
 
 /////////////////////////////////////////////
-func setAppCPURateUpper(rate string) error {
+func setAppCPURateThreshold(rate string) error {
 	return nil
 }
 
-func getAppCPURateUpper() string {
+func getAppCPURateThreshold() string {
 	return "80"
 }
 
-func setAppMemoryRateUpper(rate string) error {
+func setAppMemoryRateThreshold(rate string) error {
 	return nil
 }
 
-func getAppMemoryRateUpper() string {
+func getAppMemoryRateThreshold() string {
 	return "80"
 }
 
@@ -342,18 +313,18 @@ func getAppMonitorWndTime() string {
 }
 
 /////////////////////////////////////////////
-func setTemperatureUpper(lower, upper string) error {
+func setTemperatureThreshold(lower, upper string) error {
 	return nil
 }
 
-func getTemperatureUpper() (lower, upper string) {
+func getTemperatureThreshold() (lower, upper string) {
 	return "-40", "40"
 }
 
-func setTemperatureUpperWnd(wnd string) error {
+func setTemperatureThresholdWnd(wnd string) error {
 	return nil
 }
 
-func getTemperatureUpperWnd() string {
+func getTemperatureThresholdWnd() string {
 	return "10"
 }
