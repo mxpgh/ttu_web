@@ -104,14 +104,14 @@ func getDevRunTimes() string {
 }
 
 func getDevMemory() string {
-	mem := C.getRamSize()
-	return strconv.Itoa(int(mem)) + " KB"
-	//return execBashCmd(`free -m |grep "Mem:" | awk '{print $2}'`) + "M"
+	//mem := C.getRamSize()
+	//return strconv.Itoa(int(mem)) + " KB"
+	return execBashCmd(`free -h |grep "Mem:" | awk '{print $2}'`) + "B"
 }
 
 func getDevDisk() string {
 	disk := C.getDiskSize()
-	return strconv.FormatFloat(float64(disk), 'f', 2, 64) + " GB"
+	return strconv.FormatFloat(float64(disk), 'f', 2, 64) + "GB"
 	//return execBashCmd(`df -h / | awk '{print $2}' | sed -n '2p'`)
 }
 
@@ -155,7 +155,7 @@ func getDevTemperature() string {
 	if 0 == ret {
 		return "传感器故障"
 	}
-	return strconv.Itoa(int(temp)) + " ℃"
+	return strconv.Itoa(int(temp)) + "℃"
 }
 
 func getOsCPURate() string {
@@ -191,7 +191,10 @@ func getAppMemoryRate() string {
 }
 
 func getRTCFault() string {
+	tm := time.Now().UnixNano() / int64(time.Millisecond)
 	ret := C.getRtcStatus()
+	ed := time.Now().UnixNano() / int64(time.Millisecond)
+	log.Println("getRtcStatus time: ", ed-tm)
 	if 0 == ret {
 		return "异常"
 	}
