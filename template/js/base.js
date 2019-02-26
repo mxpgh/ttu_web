@@ -24,6 +24,11 @@ $("#upload").click(function(event){
     window.location.href = "/upload/index";
 })
 
+$("#container").click(function(event){
+    event.preventDefault();
+    window.location.href = "/container/index";
+})
+
 function del_cookie(name)
 {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
@@ -57,6 +62,25 @@ $("#uploadform").submit(function(event){
         type        : "POST",
         dataType    : "json",
         enctype     : "multipart/form-data",
+        xhr: function(){
+            myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){
+              myXhr.upload.addEventListener('progress',function(e) {
+                if (e.lengthComputable) {
+                  var percent = Math.floor(e.loaded/e.total*100);
+                  if(percent <= 100) {
+                    $("#J_progress_bar").progress('set progress', percent);
+                    $("#J_progress_label").html('已上传：'+percent+'%');
+                  }
+                  if(percent >= 100) {
+                    $("#J_progress_label").html('文件上传完毕，请等待...');
+                    $("#J_progress_label").addClass('success');
+                  }
+                }
+              }, false);
+            }
+            return myXhr;
+        },
         success     :  function(ret){
             if(ret.Ret == "0") {
                 alert(ret.Reason);
