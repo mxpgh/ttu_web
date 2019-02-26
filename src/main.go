@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+
 	go timeTask()
 
 	http.Handle("/css/", http.FileServer(http.Dir("template")))
@@ -26,6 +27,7 @@ func main() {
 	http.HandleFunc("/config/", configHandler)
 	http.HandleFunc("/status/", statusHandler)
 	http.HandleFunc("/upload/", uploadHandler)
+	http.HandleFunc("/container/", containerHandler)
 	http.HandleFunc("/", NotFoundHandler)
 	log.Println("Start ttu_web server: listen port 8888")
 	log.Fatal(http.ListenAndServe(":8888", nil))

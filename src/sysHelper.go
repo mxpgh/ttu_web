@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -13,10 +14,13 @@ var (
 	gk8sVer           string
 	gContaninerCPU    string
 	gContaninerMemory string
+	gCLRW             sync.RWMutex
+	gContainerList    []dockerStat
 )
 
 type dockerStat struct {
 	Container string
+	Name      string
 	Memory    string
 	CPU       string
 }
@@ -24,7 +28,12 @@ type dockerStat struct {
 func timeTask() {
 	for {
 		gk8sVer = execBashCmd("kubelet --version")
-		gContaninerCPU, gContaninerMemory = getDockerStat()
+		var cl []dockerStat
+		gContaninerCPU, gContaninerMemory, cl = getDockerStat()
+		gCLRW.Lock()
+		gContainerList = gContainerList[:0]
+		gContainerList = append(gContainerList, cl...)
+		gCLRW.Unlock()
 		time.Sleep(5 * time.Second)
 	}
 }
@@ -153,9 +162,9 @@ func getCommunicationNetworkStatus() string {
 	return ""
 }
 
-func getDockerStat() (cpu, mem string) {
+func getDockerStat() (cpu, mem string, dL []dockerStat) {
 	ret := execBashCmd(`docker stats --no-stream --format \
-	"{\"container\":\"{{ .Container }}\",\"memory\":\"{{ .MemPerc }}\",\"cpu\":\"{{ .CPUPerc }}\"}"`)
+	"{\"container\":\"{{ .Container }}\",\"name\":\"{{ .Name }}\",\"memory\":\"{{ .MemPerc }}\",\"cpu\":\"{{ .CPUPerc }}\"}"`)
 	//log.Println(ret)
 
 	totMem := 0.0
@@ -176,6 +185,7 @@ func getDockerStat() (cpu, mem string) {
 		} else {
 			//log.Println("memory: ", ds.Memory, "cpu: ", ds.Cpu)
 			//log.Println(strings.TrimRight(ds.Memory, "%"))
+			dL = append(dL, ds)
 			f, err := strconv.ParseFloat(strings.TrimRight(ds.Memory, "%"), 32)
 			if err == nil {
 				totMem += f
