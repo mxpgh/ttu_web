@@ -155,7 +155,7 @@ func getK8sInfo() string {
 }
 
 func getDockerInfo() string {
-	return execBashCmd(`docker -v | awk '{print $3}' | awk '{split($0,b,",");print b[1]}'`)
+	return execBashCmd(`docker -v | awk '{print $3}' | awk '{split($0, b, ","); print b[1]}'`)
 }
 
 func getDevTemperature() string {
@@ -184,11 +184,11 @@ func getOsDiskRate() string {
 }
 
 func getContainerCPURate() string {
-	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print$3}'`) + "%"
+	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print $3}'`) + "%"
 }
 
 func getContainerMemoryRate() string {
-	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print$4}'`) + "%"
+	return execBashCmd(`ps -aux | grep dockerd | grep -v grep | awk '{print $4}'`) + "%"
 }
 
 func getAppCPURate() string {
