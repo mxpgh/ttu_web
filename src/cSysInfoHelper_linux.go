@@ -37,20 +37,85 @@ type dockerStat struct {
 }
 
 func timeTask() {
-	for {
-		gk8sVer = execBashCmd("kubelet --version")
-		var cl []dockerStat
-		gAppCPU, gAppMemory, cl = getDockerStat()
-		gCLRW.Lock()
-		gContainerList = gContainerList[:0]
-		gContainerList = append(gContainerList, cl...)
-		gCLRW.Unlock()
+	var waitConfTime = 5 * time.Second
+	var waitTaskTime = 5 * time.Second
+	var waitContainerTime time.Duration
+	var waitAppTime time.Duration
+	var containerCPURateThreshold, containerMemRateThreshold, AppCPURateThreshold, AppMemRateThreshold int
+	startConfTime := time.Now().UTC()
+	startTaskTime := time.Now().UTC()
+	startContainerTime := time.Now().UTC()
+	startAppTime := time.Now().UTC()
 
-		{
+	for {
+		endTime := time.Now().UTC()
+		var durationConf = endTime.Sub(startConfTime)
+		if durationConf >= waitConfTime {
+			waitContainerTime = time.Duration(getContainerMonitorWndIntTime()) * time.Minute
+			waitAppTime = time.Duration(getAppMonitorWndIntTime()) * time.Minute
+			containerCPURateThreshold = getContainerCPURateIntThreshold()
+			containerMemRateThreshold = getContainerMemoryRateIntThreshold()
+			AppCPURateThreshold = getAppCPURateIntThreshold()
+			AppMemRateThreshold = getAppMemoryRateIntThreshold()
+
+			startConfTime = time.Now().UTC()
+			log.Printf("waitConf %v %v %.3f", waitConfTime, durationConf, durationConf.Seconds())
+		}
+
+		endTime = time.Now().UTC()
+		var durationTask = endTime.Sub(startTaskTime)
+		if durationTask >= waitTaskTime {
+
+			gk8sVer = execBashCmd("kubelet --version")
+			var cl []dockerStat
+			gAppCPU, gAppMemory, cl = getDockerStat()
+
+			gCLRW.Lock()
+			gContainerList = gContainerList[:0]
+			gContainerList = append(gContainerList, cl...)
+			gCLRW.Unlock()
+
 			rate := C.getCpuOccupy()
 			gCPURate = strconv.Itoa(int(rate)) + "%"
+			
+			startTaskTime = time.Now().UTC()
+			log.Printf("waitTask %v %v %.3f", waitTaskTime, durationTask, durationTask.Seconds())
+
+			var durationContainer = endTime.Sub(startContainerTime)
+			if durationContainer >= waitContainerTime {
+				for _, v := range cl {
+					f, err := strconv.ParseFloat(strings.TrimRight(v.CPU, "%"), 32)
+					if err != nil {
+						continue
+					}
+					if int(f*100) > containerCPURateThreshold {
+
+					}
+
+					f, err = strconv.ParseFloat(strings.TrimRight(v.Memory, "%"), 32)
+					if err != nil {
+						continue
+					}
+					if int(f*100) > containerMemRateThreshold {
+
+					}
+				}
+
+				startContainerTime = time.Now().UTC()
+				log.Printf("waitContainer %v %v %.3f", waitContainerTime, durationContainer, durationContainer.Seconds())
+			}
+
+			var durationApp = endTime.Sub(startAppTime)
+			if durationApp >= waitAppTime {
+				_ = AppCPURateThreshold
+				_ = AppMemRateThreshold
+
+				startAppTime = time.Now().UTC()
+				log.Printf("waitApp %v %v %.3f", waitAppTime, durationApp, durationApp.Seconds())
+			}
 		}
-		time.Sleep(5 * time.Second)
+
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
@@ -437,6 +502,15 @@ func getContainerCPURateThreshold() string {
 	return strconv.Itoa(int(rt))
 }
 
+func getContainerCPURateIntThreshold() int {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.docker, C.cpu, &rt)
+	if 0 == ret {
+		rt = 80
+	}
+	return int(rt)
+}
+
 func setContainerMemoryRateThreshold(rate string) error {
 	rt, _ := strconv.Atoi(rate)
 	ret := C.setMonParameter(C.docker, C.ram, C.int(rt))
@@ -451,6 +525,15 @@ func getContainerMemoryRateThreshold() string {
 	return strconv.Itoa(int(rt))
 }
 
+func getContainerMemoryRateIntThreshold() int {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.docker, C.ram, &rt)
+	if 0 == ret || ret < 0 || ret > 100 {
+		rt = 80
+	}
+	return int(rt)
+}
+
 func setContainerMonitorWndTime(wnd string) error {
 	tm, _ := strconv.Atoi(wnd)
 	ret := C.setMonParameter(C.docker, C.interval, C.int(tm))
@@ -458,11 +541,22 @@ func setContainerMonitorWndTime(wnd string) error {
 	return nil
 }
 
+// 单位：分钟
 func getContainerMonitorWndTime() string {
 	tm := C.int(0)
 	ret := C.getMonParameter(C.docker, C.interval, &tm)
 	_ = ret
 	return strconv.Itoa(int(tm))
+}
+
+// 单位：分钟
+func getContainerMonitorWndIntTime() int {
+	tm := C.int(0)
+	ret := C.getMonParameter(C.docker, C.interval, &tm)
+	if 0 == ret {
+		tm = 3
+	}
+	return int(tm)
 }
 
 /////////////////////////////////////////////
@@ -480,6 +574,15 @@ func getAppCPURateThreshold() string {
 	return strconv.Itoa(int(rt))
 }
 
+func getAppCPURateIntThreshold() int {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.app, C.cpu, &rt)
+	if 0 == ret {
+		rt = 80
+	}
+	return int(rt)
+}
+
 func setAppMemoryRateThreshold(rate string) error {
 	rt, _ := strconv.Atoi(rate)
 	ret := C.setMonParameter(C.app, C.ram, C.int(rt))
@@ -494,6 +597,16 @@ func getAppMemoryRateThreshold() string {
 	return strconv.Itoa(int(rt))
 }
 
+func getAppMemoryRateIntThreshold() int {
+	rt := C.int(0)
+	ret := C.getMonParameter(C.app, C.ram, &rt)
+	if 0 == ret || rt < 0 || rt > 100 {
+		rt = 80
+	}
+	return int(rt)
+}
+
+// 单位：分钟
 func setAppMonitorWndTime(wnd string) error {
 	tm, _ := strconv.Atoi(wnd)
 	ret := C.setMonParameter(C.app, C.interval, C.int(tm))
@@ -501,11 +614,22 @@ func setAppMonitorWndTime(wnd string) error {
 	return nil
 }
 
+// 单位：分钟
 func getAppMonitorWndTime() string {
 	tm := C.int(0)
-	ret := C.getMonParameter(C.app, C.ram, &tm)
+	ret := C.getMonParameter(C.app, C.interval, &tm)
 	_ = ret
 	return strconv.Itoa(int(tm))
+}
+
+// 单位：分钟
+func getAppMonitorWndIntTime() int {
+	tm := C.int(0)
+	ret := C.getMonParameter(C.app, C.interval, &tm)
+	if 0 == ret {
+		tm = 3
+	}
+	return int(tm)
 }
 
 /////////////////////////////////////////////

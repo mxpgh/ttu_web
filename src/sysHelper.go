@@ -28,15 +28,82 @@ type dockerStat struct {
 }
 
 func timeTask() {
+	var waitConfTime = 5 * time.Second
+	var waitTaskTime = 5 * time.Second
+	var waitContainerTime time.Duration
+	var waitAppTime time.Duration
+	var containerCPURateThreshold, containerMemRateThreshold, AppCPURateThreshold, AppMemRateThreshold int
+	startConfTime := time.Now().UTC()
+	startTaskTime := time.Now().UTC()
+	startContainerTime := time.Now().UTC()
+	startAppTime := time.Now().UTC()
+
 	for {
-		gk8sVer = execBashCmd("kubelet --version")
-		var cl []dockerStat
-		gContaninerCPU, gContaninerMemory, cl = getDockerStat()
-		gCLRW.Lock()
-		gContainerList = gContainerList[:0]
-		gContainerList = append(gContainerList, cl...)
-		gCLRW.Unlock()
-		time.Sleep(5 * time.Second)
+		endTime := time.Now().UTC()
+		var durationConf = endTime.Sub(startConfTime)
+		if durationConf >= waitConfTime {
+			waitContainerTime = time.Duration(getContainerMonitorWndIntTime()) * time.Minute
+			waitAppTime = time.Duration(getAppMonitorWndIntTime()) * time.Minute
+			containerCPURateThreshold = getContainerCPURateIntThreshold()
+			containerMemRateThreshold = getContainerMemoryRateIntThreshold()
+			AppCPURateThreshold = getAppCPURateIntThreshold()
+			AppMemRateThreshold = getAppMemoryRateIntThreshold()
+
+			startConfTime = time.Now().UTC()
+			log.Printf("waitConf %v %v %.3f", waitConfTime, durationConf, durationConf.Seconds())
+		}
+
+		endTime = time.Now().UTC()
+		var durationTask = endTime.Sub(startTaskTime)
+		if durationTask >= waitTaskTime {
+			gk8sVer = execBashCmd("kubelet --version")
+
+			var cl []dockerStat
+			gContaninerCPU, gContaninerMemory, cl = getDockerStat()
+
+			gCLRW.Lock()
+			gContainerList = gContainerList[:0]
+			gContainerList = append(gContainerList, cl...)
+			gCLRW.Unlock()
+
+			startTaskTime = time.Now().UTC()
+			log.Printf("waitTask %v %v %.3f", waitTaskTime, durationTask, durationTask.Seconds())
+
+			var durationContainer = endTime.Sub(startContainerTime)
+			if durationContainer >= waitContainerTime {
+				for _, v := range cl {
+					f, err := strconv.ParseFloat(strings.TrimRight(v.CPU, "%"), 32)
+					if err != nil {
+						continue
+					}
+					if int(f*100) > containerCPURateThreshold {
+
+					}
+
+					f, err = strconv.ParseFloat(strings.TrimRight(v.Memory, "%"), 32)
+					if err != nil {
+						continue
+					}
+					if int(f*100) > containerMemRateThreshold {
+
+					}
+				}
+
+				startContainerTime = time.Now().UTC()
+				log.Printf("waitContainer %v %v %.3f", waitContainerTime, durationContainer, durationContainer.Seconds())
+			}
+
+			var durationApp = endTime.Sub(startAppTime)
+			if durationApp >= waitAppTime {
+				_ = AppCPURateThreshold
+				_ = AppMemRateThreshold
+
+				startAppTime = time.Now().UTC()
+				log.Printf("waitApp %v %v %.3f", waitAppTime, durationApp, durationApp.Seconds())
+			}
+		}
+
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
@@ -283,6 +350,10 @@ func getContainerCPURateThreshold() string {
 	return "80"
 }
 
+func getContainerCPURateIntThreshold() int {
+	return 80
+}
+
 func setContainerMemoryRateThreshold(rate string) error {
 	return nil
 }
@@ -291,12 +362,23 @@ func getContainerMemoryRateThreshold() string {
 	return "80"
 }
 
+func getContainerMemoryRateIntThreshold() int {
+	return 80
+}
+
+// 单位：分钟
 func setContainerMonitorWndTime(wnd string) error {
 	return nil
 }
 
+// 单位：分钟
 func getContainerMonitorWndTime() string {
 	return "5"
+}
+
+// 单位：分钟
+func getContainerMonitorWndIntTime() int {
+	return 5
 }
 
 /////////////////////////////////////////////
@@ -308,6 +390,10 @@ func getAppCPURateThreshold() string {
 	return "80"
 }
 
+func getAppCPURateIntThreshold() int {
+	return 80
+}
+
 func setAppMemoryRateThreshold(rate string) error {
 	return nil
 }
@@ -316,12 +402,23 @@ func getAppMemoryRateThreshold() string {
 	return "80"
 }
 
+func getAppMemoryRateIntThreshold() int {
+	return 80
+}
+
+// 单位：分钟
 func setAppMonitorWndTime(wnd string) error {
 	return nil
 }
 
+// 单位：分钟
 func getAppMonitorWndTime() string {
 	return "5"
+}
+
+// 单位：分钟
+func getAppMonitorWndIntTime() int {
+	return 5
 }
 
 /////////////////////////////////////////////
