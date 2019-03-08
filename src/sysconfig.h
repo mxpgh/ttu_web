@@ -113,6 +113,10 @@ extern int getMonParameter(CATEGORY category,PARAMETER parameter,int * value);
 //设置docker，app监控参数。成功返回1，失败返回0
 extern int setMonParameter(CATEGORY category,PARAMETER parameter,int value);
 
+//docker，app 超阈值报警。成功返回1，失败返回0
+//name:		APP，docker名
+//value:	当前值，百分比
+extern int adAlarm(CATEGORY category,PARAMETER parameter,char * name,int value);
 
 
 

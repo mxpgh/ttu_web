@@ -12,6 +12,16 @@ import (
 	"time"
 )
 
+const (
+	container = iota
+	app
+)
+
+const (
+	cpu = iota
+	memory
+)
+
 var (
 	gk8sVer           string
 	gContaninerCPU    string
@@ -436,4 +446,9 @@ func setTemperatureThresholdWnd(wnd string) error {
 
 func getTemperatureThresholdWnd() string {
 	return "10"
+}
+
+// 告警通知
+func pushAlarm(appType, resType int, name string, value int) error {
+	return nil
 }

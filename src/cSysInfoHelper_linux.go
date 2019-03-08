@@ -20,6 +20,16 @@ import (
 */
 import "C"
 
+const (
+	container = iota
+	app 
+)
+
+const (
+	cpu = iota
+	memory
+)
+
 var (
 	gCPURate   string
 	gk8sVer    string
@@ -89,7 +99,7 @@ func timeTask() {
 						continue
 					}
 					if int(f*100) > containerCPURateThreshold {
-
+						pushAlarm(container, cpu, v.Name, int(f*100))
 					}
 
 					f, err = strconv.ParseFloat(strings.TrimRight(v.Memory, "%"), 32)
@@ -97,7 +107,7 @@ func timeTask() {
 						continue
 					}
 					if int(f*100) > containerMemRateThreshold {
-
+						pushAlarm(container, memory, v.Name, int(f*100))
 					}
 				}
 
@@ -667,4 +677,39 @@ func getTemperatureThresholdWnd() string {
 	ret := C.getTempInterval(&tm)
 	_ = ret
 	return strconv.Itoa(int(tm))
+}
+
+// 告警通知
+func pushAlarm(appType, resType int, name string, value int) error {
+	var apptype C.CATEGORY
+	var restype C.PARAMETER
+	switch appType {
+	case container:
+		apptype = C.docker
+
+	case app:
+		apptype = C.app
+
+	default:
+		return errors.New("app type error")
+	}
+
+	switch resType {
+	case cpu:
+		restype = C.cpu
+
+	case memory:
+		restype = C.ram
+
+	default:
+		return errors.New("res type error")
+	}
+
+	cn := C.CString(name)
+	ret := C.adAlarm(apptype, restype, cn, C.int(value))
+	C.free(unsafe.Pointer(cn))
+	if 0 == ret {
+		return errors.New("adAlarm error")
+	}
+	return nil
 }
