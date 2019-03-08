@@ -84,45 +84,87 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	}
 
 	ipv4 := r.FormValue("IPv4")
-	if !validIP(ipv4, "主站IPv4地址错误", w) {
+	if !validIP(ipv4, "业务主站IPv4地址错误", w) {
 		return
 	}
 	ipv4Port := r.FormValue("IPv4Port")
-	if !validPort(ipv4Port, "主站IPv4端口错误", w) {
+	if !validPort(ipv4Port, "业务主站IPv4端口错误", w) {
 		return
 	}
 	setMainStationIPv4(ipv4, ipv4Port)
 
 	ipv6 := r.FormValue("IPv6")
-	if !validIP(ipv6, "主站IPv6地址错误", w) {
+	if !validIP(ipv6, "业务主站IPv6地址错误", w) {
 		return
 	}
 	ipv6Port := r.FormValue("IPv6Port")
-	if !validPort(ipv6Port, "主站IPv6端口错误", w) {
+	if !validPort(ipv6Port, "业务主站IPv6端口错误", w) {
 		return
 	}
 	setMainStationIPv6(ipv6, ipv6Port)
 
 	backipv4 := r.FormValue("BackIPv4")
-	if !validIP(backipv4, "备份主站IPv4地址错误", w) {
+	if !validIP(backipv4, "备份业务主站IPv4地址错误", w) {
 		return
 	}
 	backipv4Port := r.FormValue("BackIPv4Port")
-	if !validPort(backipv4Port, "备份主站IPv4端口错误", w) {
+	if !validPort(backipv4Port, "备份业务主站IPv4端口错误", w) {
 		return
 	}
 	setBackMainStationIPv4(backipv4, backipv4Port)
 
 	backipv6 := r.FormValue("BackIPv6")
-	if !validIP(backipv6, "备份主站IPv6地址错误", w) {
+	if !validIP(backipv6, "备份业务主站IPv6地址错误", w) {
 		return
 	}
 	backipv6Port := r.FormValue("BackIPv6Port")
-	if !validPort(backipv6Port, "备份主站IPv6端口错误", w) {
+	if !validPort(backipv6Port, "备份业务主站IPv6端口错误", w) {
 		return
 	}
 	setBackMainStationIPv6(backipv6, backipv6Port)
 
+	//-----------------------------------------------------------------------------------
+	opsIpv4 := r.FormValue("OPSIPv4")
+	if !validIP(opsIpv4, "运维IPv4地址错误", w) {
+		return
+	}
+	opsIpv4Port := r.FormValue("OPSIPv4Port")
+	if !validPort(opsIpv4Port, "运维主站IPv4端口错误", w) {
+		return
+	}
+	setOPSMainStationIPv4(opsIpv4, opsIpv4Port)
+
+	opsIpv6 := r.FormValue("OPSIPv6")
+	if !validIP(opsIpv6, "运维主站IPv6地址错误", w) {
+		return
+	}
+	opsIpv6Port := r.FormValue("OPSIPv6Port")
+	if !validPort(opsIpv6Port, "运维主站IPv6端口错误", w) {
+		return
+	}
+	setOPSMainStationIPv6(opsIpv6, opsIpv6Port)
+
+	backOpsIpv4 := r.FormValue("BackOPSIPv4")
+	if !validIP(backOpsIpv4, "备份运维主站IPv4地址错误", w) {
+		return
+	}
+	backOpsIpv4Port := r.FormValue("BackOPSIPv4Port")
+	if !validPort(backOpsIpv4Port, "备份运维主站IPv4端口错误", w) {
+		return
+	}
+	setBackOPSMainStationIPv4(backOpsIpv4, backOpsIpv4Port)
+
+	backOpsIpv6 := r.FormValue("BackOPSIPv6")
+	if !validIP(backOpsIpv6, "备份运维主站IPv6地址错误", w) {
+		return
+	}
+	backOpsIpv6Port := r.FormValue("BackOPSIPv6Port")
+	if !validPort(backOpsIpv6Port, "备份运维主站IPv6端口错误", w) {
+		return
+	}
+	setBackOPSMainStationIPv6(backOpsIpv6, backOpsIpv6Port)
+
+	//---------------------------------------------------------------------------
 	sysCPURateUpper := r.FormValue("SysCPURateUpper")
 	if !validPercent(sysCPURateUpper, "CPU 使用率上限设置错误", w) {
 		return
@@ -147,6 +189,7 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	}
 	setSysMonitorWndTime(sysMonitorWndTime)
 
+	//----------------------------------------------------------------------------------
 	containerCPURateUpper := r.FormValue("ContainerCPURateUpper")
 	if !validPercent(containerCPURateUpper, "容器CPU使用率上限设置错误", w) {
 		return
@@ -159,6 +202,7 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	}
 	setContainerCPURateThreshold(containerMemRateUpper)
 
+	//------------------------------------------------------------------------------------
 	appCPURateUpper := r.FormValue("AppCPURateUpper")
 	if !validPercent(appCPURateUpper, "APP CPU使用率上限设置错误", w) {
 		return
@@ -177,6 +221,7 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	}
 	setAppMonitorWndTime(appCPURateUpper)
 
+	//----------------------------------------------------------------------------------------
 	tempLower := r.FormValue("TempLower")
 	if !validValue(tempLower, "温度下限阀值错误", w) {
 		return

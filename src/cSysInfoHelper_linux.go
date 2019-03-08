@@ -422,6 +422,87 @@ func getBackMainStationIPv6() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
+//////////////////////////////////////////
+func setOPSMainStationIPv4(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(0), C.int(4), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set ops main station ipv4 error")
+	}
+	return nil
+}
+
+func getOPSMainStationIPv4() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 16)
+	ret := C.getServer(C.int(0), C.int(4), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+	return byteToString(cIp), uint16(cPort)
+}
+
+func setBackOPSMainStationIPv4(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(1), C.int(4), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set back ops main station ipv4 error")
+	}
+	return nil
+}
+
+func getBackOPSMainStationIPv4() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 16)
+	ret := C.getServer(C.int(1), C.int(4), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+
+	return byteToString(cIp), uint16(cPort)
+}
+
+///////////////////////////////////////////
+func setOPSMainStationIPv6(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(0), C.int(6), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set ops main station ipv6 error")
+	}
+	return nil
+}
+
+func getOPSMainStationIPv6() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 128)
+	ret := C.getServer(C.int(0), C.int(6), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+
+	return byteToString(cIp), uint16(cPort)
+}
+
+func setBackOPSMainStationIPv6(ip string, port string) error {
+	cs := C.CString(ip)
+	pt, _ := strconv.Atoi(port)
+	ret := C.setServer(C.int(1), C.int(6), cs, C.int(pt))
+	C.free(unsafe.Pointer(cs))
+	if 0 == ret {
+		return errors.New("set back ops main station ipv6 error")
+	}
+	return nil
+}
+
+func getBackOPSMainStationIPv6() (ip string, port uint16) {
+	cPort := C.int(0)
+	cIp := make([]byte, 128)
+	ret := C.getServer(C.int(1), C.int(6), (*C.char)(unsafe.Pointer(&cIp[0])), &cPort)
+	_ = ret
+
+	return byteToString(cIp), uint16(cPort)
+}
+
 ////////////////////////////////////////////
 //set system current time
 func setSysCurTime(tm string) error {

@@ -318,6 +318,43 @@ func getBackMainStationIPv6() (ip string, port uint16) {
 	return "fe80::c10c:9d86:382f:4797", 6443
 }
 
+//////////////////////////////////////////
+func setOPSMainStationIPv4(ip string, port string) error {
+	return nil
+}
+
+func getOPSMainStationIPv4() (ip string, port uint16) {
+	buf := make([]byte, 16)
+	log.Println(buf)
+	log.Println(byteToString(buf))
+	return byteToString(buf), 6443
+}
+
+func setBackOPSMainStationIPv4(ip string, port string) error {
+	return nil
+}
+
+func getBackOPSMainStationIPv4() (ip string, port uint16) {
+	return "192.168.1.0", 6443
+}
+
+///////////////////////////////////////////
+func setOPSMainStationIPv6(ip string, port string) error {
+	return nil
+}
+
+func getOPSMainStationIPv6() (ip string, port uint16) {
+	return "fe80::c10c:9d86:382f:4797", 6443
+}
+
+func setBackOPSMainStationIPv6(ip string, port string) error {
+	return nil
+}
+
+func getBackOPSMainStationIPv6() (ip string, port uint16) {
+	return "fe80::c10c:9d86:382f:4797", 6443
+}
+
 ////////////////////////////////////////////
 func setSysCPURateThreshold(rate string) error {
 	return nil
