@@ -21,6 +21,7 @@
         <div class="labeled"><a id="config" class="labeled" href="#">配置信息</a></div>
         <div class="label"><a id="status" class="label" href="#">状态信息</a></div>
         <div class="label"><a id="container" class="label" href="#">容器列表</a></div>
+        <div class="label"><a id="passwd" class="label" href="#">密码管理</a></div>
     <!--
         <div class="label"><a id="upload" class="label" href="#">升级管理</a></div>
     --->
@@ -61,6 +62,32 @@
                     <td>备用运维主站IPv6地址：</td><td><input class="input_ipv6" type="text" name="BackOPSIPv6" id="BackOPSIPv6" value={{.BackOPSMainStationIPv6}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
                     <td>端口:</td><td><input class="input_port" type="text" name="BackOPSIPv6Port" id="BackOPSIPv6Port" value={{.BackOPSMainStationIPv6Port}} maxlength=5 min=0 max=65535 size=6 input onkeyup="value=value.replace(/[^\d{1,}\d{1,}|\d{1,}]/g,'')" onafterpaste="value=value.replace(//D/g,'')"></input></td>
                 </tr>
+
+                <tr>
+                    <td style="width:182px">本地静态IPv4地址：</td><td><input class="input_ipv4" type="text" name="LocalIPv4" id="LocalIPv4" value={{.LocalIPv4}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv6地址：</td><td><input class="input_ipv6" type="text" name="LocalIPv6" id="LocalIPv6" value={{.LocalIPv6}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv4路由地址：</td><td><input class="input_ipv4" type="text" name="LocalIPv4Route" id="LocalIPv4Route" value={{.LocalIPv4Route}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv6路由地址：</td><td><input class="input_ipv6" type="text" name="LocalIPv6Route" id="LocalIPv6Route" value={{.LocalIPv6Route}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                </tr>
+                <tr>
+                    <td style="width:182px">本地静态IPv4子网掩码：</td><td><input class="input_ipv4" type="text" name="LocalIPv4SubMask" id="LocalIPv4SubMask" value={{.LocalIPv4SubMask}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv6子网掩码：</td><td><input class="input_ipv6" type="text" name="LocalIPv6SubMask" id="LocalIPv6SubMask" value={{.LocalIPv6SubMask}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv4 DNS解析：</td><td><input class="input_ipv4" type="text" name="LocalIPv4DNS" id="LocalIPv4DNS" value={{.LocalIPv4DNS}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
+                </tr>
+                <tr>
+                    <td>本地静态IPv6 DNS解析：</td><td><input class="input_ipv6" type="text" name="LocalIPv6DNS" id="LocalIPv6DNS" value={{.LocalIPv6DNS}} input onkeyup="value=value.replace(/[^\w\:\/]/ig,'')"></input></td>
+                </tr>
+
             </table>
 
             <table>
@@ -106,7 +133,7 @@
                 <tr>
                     <td>温度超上限判定窗口期：</td><td><input class="input_other" type="text" name="TempUpperWnd" id="TempUpperWnd" value={{.TempUpperWnd}} input onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></input></td>
                 </tr>
-                
+
             </table>
             <table>
                 <tr class="tr_button">
