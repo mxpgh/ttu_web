@@ -28,6 +28,15 @@ type Config struct {
 	BackOPSMainStationIPv6     string
 	BackOPSMainStationIPv6Port uint16
 
+	LocalIPv4        string
+	LocalIPv6        string
+	LocalIPv4Route   string
+	LocalIPv6Route   string
+	LocalIPv4SubMask string
+	LocalIPv6SubMask string
+	LocalIPv4DNS     string
+	LocalIPv6DNS     string
+
 	SysCPURateUpper   string
 	SysMemRateUpper   string
 	SysDiskRateUpper  string
@@ -88,6 +97,15 @@ func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request
 		uint16(backOPSIpv4Port),
 		backOPSIpv6,
 		uint16(backOPSIpv6Port),
+
+		getLocalIPv4(),
+		getLocalIPv6(),
+		getLocalIPv4Route(),
+		getLocalIPv6Route(),
+		getLocalIPv4SubMask(),
+		getLocalIPv6SubMask(),
+		getLocalIPv4DNS(),
+		getLocalIPv6DNS(),
 
 		getSysCPURateThreshold(),
 		getSysMemoryRateThreshold(),

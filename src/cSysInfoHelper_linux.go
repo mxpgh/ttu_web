@@ -503,7 +503,72 @@ func getBackOPSMainStationIPv6() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
-////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+func getLocalIPv4() string {
+	return "192.168.1.12"
+}
+
+func setLocalIPv4(ip string) error {
+	return nil
+}
+
+func getLocalIPv6() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6(ip string) error {
+	return nil
+}
+
+func getLocalIPv4Route() string {
+	return "192.168.1.1"
+}
+
+func setLocalIPv4Route(route string) error {
+	return nil
+}
+
+func getLocalIPv6Route() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6Route(route string) error {
+	return nil
+}
+
+func getLocalIPv4SubMask() string {
+	return "255.255.255.0"
+}
+
+func setLocalIPv4SubMask(mask string) error {
+	return nil
+}
+
+func getLocalIPv6SubMask() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6SubMask(mask string) error {
+	return nil
+}
+
+func getLocalIPv4DNS() string {
+	return "192.168.1.1"
+}
+
+func setLocalIPv4DNS(dns string) error {
+	return nil
+}
+
+func getLocalIPv6DNS() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6DNS(dns string) error {
+	return nil
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 //set system current time
 func setSysCurTime(tm string) error {
 	cs := C.CString(tm)
@@ -564,7 +629,7 @@ func getSysDiskRateThreshold() string {
 	return strconv.Itoa(int(upper))
 }
 
-///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 func setSysMonitorWndTime(wnd string) error {
 	tm, _ := strconv.Atoi(wnd)
 	ret := C.setAlarmInterval(C.int(tm))
@@ -650,7 +715,7 @@ func getContainerMonitorWndIntTime() int {
 	return int(tm)
 }
 
-/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 func setAppCPURateThreshold(rate string) error {
 	rt, _ := strconv.Atoi(rate)
 	ret := C.setMonParameter(C.app, C.cpu, C.int(rt))
@@ -723,7 +788,7 @@ func getAppMonitorWndIntTime() int {
 	return int(tm)
 }
 
-/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 func setTemperatureThreshold(lower, upper string) error {
 	tempUpper, err := strconv.Atoi(upper)
 	if err != nil {

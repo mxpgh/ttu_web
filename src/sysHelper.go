@@ -355,7 +355,72 @@ func getBackOPSMainStationIPv6() (ip string, port uint16) {
 	return "fe80::c10c:9d86:382f:4797", 6443
 }
 
-////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+func getLocalIPv4() string {
+	return "192.168.1.12"
+}
+
+func setLocalIPv4(ip string) error {
+	return nil
+}
+
+func getLocalIPv6() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6(ip string) error {
+	return nil
+}
+
+func getLocalIPv4Route() string {
+	return "192.168.1.1"
+}
+
+func setLocalIPv4Route(route string) error {
+	return nil
+}
+
+func getLocalIPv6Route() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6Route(route string) error {
+	return nil
+}
+
+func getLocalIPv4SubMask() string {
+	return "255.255.255.0"
+}
+
+func setLocalIPv4SubMask(mask string) error {
+	return nil
+}
+
+func getLocalIPv6SubMask() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6SubMask(mask string) error {
+	return nil
+}
+
+func getLocalIPv4DNS() string {
+	return "192.168.1.1"
+}
+
+func setLocalIPv4DNS(dns string) error {
+	return nil
+}
+
+func getLocalIPv6DNS() string {
+	return "fe80::c10c:9d86:382f:4797"
+}
+
+func setLocalIPv6DNS(dns string) error {
+	return nil
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
 func setSysCPURateThreshold(rate string) error {
 	return nil
 }

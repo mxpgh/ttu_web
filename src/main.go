@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -17,6 +18,15 @@ func main() {
 
 	go timeTask()
 
+	f, err := os.OpenFile(ttuDataFile, os.O_RDONLY, 0600)
+	defer f.Close()
+	if nil == err {
+		passwd := make([]byte, 256)
+		l, err := f.Read(passwd)
+		if nil == err && l > 0 {
+			adminPasswd = string(passwd[:l])
+		}
+	}
 	http.Handle("/css/", http.FileServer(http.Dir("template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
 
@@ -28,6 +38,7 @@ func main() {
 	http.HandleFunc("/status/", statusHandler)
 	http.HandleFunc("/upload/", uploadHandler)
 	http.HandleFunc("/container/", containerHandler)
+	http.HandleFunc("/passwd/", passwdHandler)
 	http.HandleFunc("/", NotFoundHandler)
 	log.Println("Start ttu_web server: listen port 8888")
 	log.Fatal(http.ListenAndServe(":8888", nil))

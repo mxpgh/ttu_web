@@ -17,6 +17,7 @@ import (
 var (
 	adminUser   = "admin"
 	adminPasswd = "123456"
+	ttuDataFile = "/etc/ttuWebConf"
 )
 
 type Result struct {
@@ -165,6 +166,37 @@ func (this *ajaxController) ConfigAction(w http.ResponseWriter, r *http.Request)
 	setBackOPSMainStationIPv6(backOpsIpv6, backOpsIpv6Port)
 
 	//---------------------------------------------------------------------------
+	localIpv4 := r.FormValue("localIPv4")
+	if !validIP(localIpv4, "本地静态IPV4地址格式错误", w) {
+		return
+	}
+	setLocalIPv4(localIpv4)
+
+	localIpv6 := r.FormValue("localIPv6")
+	if !validIP(localIpv6, "本地静态IPV6地址格式错误", w) {
+		return
+	}
+	setLocalIPv6(localIpv6)
+
+	localIPv4Route := r.FormValue("localIPv4Route")
+	setLocalIPv4Route(localIPv4Route)
+
+	localIPv6Route := r.FormValue("localIPv6Route")
+	setLocalIPv6Route(localIPv6Route)
+
+	localIPv4SubMask := r.FormValue("localIPv4SubMask")
+	setLocalIPv4SubMask(localIPv4SubMask)
+
+	localIPv6SubMask := r.FormValue("localIPv6SubMask")
+	setLocalIPv6SubMask(localIPv6SubMask)
+
+	localIPv4DNS := r.FormValue("localIPv4DNS")
+	setLocalIPv4DNS(localIPv4DNS)
+
+	localIPv6DNS := r.FormValue("localIPv6DNS")
+	setLocalIPv6DNS(localIPv6DNS)
+
+	//---------------------------------------------------------------------------
 	sysCPURateUpper := r.FormValue("SysCPURateUpper")
 	if !validPercent(sysCPURateUpper, "CPU 使用率上限设置错误", w) {
 		return
@@ -299,6 +331,44 @@ func (this *ajaxController) UploadAction(w http.ResponseWriter, r *http.Request)
 	io.Copy(f, file)
 
 	OutputJson(w, 0, "上传成功", nil)
+}
+
+func (this *ajaxController) PasswdAction(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		OutputJson(w, 0, "参数错误", nil)
+		return
+	}
+
+	oldPasswd := r.FormValue("admin_old_passwd")
+	if oldPasswd == "" || oldPasswd != adminPasswd {
+		OutputJson(w, 0, "原密码错误", nil)
+		return
+	}
+
+	newPasswd := r.FormValue("admin_new_passwd")
+	confirmPasswd := r.FormValue("admin_confirm_new_passwd")
+	if newPasswd == "" {
+		OutputJson(w, 0, "新密码不能为空", nil)
+		return
+	}
+
+	if confirmPasswd != newPasswd {
+		OutputJson(w, 0, "确认密码不对", nil)
+		return
+	}
+
+	f, err := os.OpenFile(ttuDataFile, os.O_CREATE|os.O_WRONLY, 0600)
+	defer f.Close()
+	if err != nil {
+		OutputJson(w, 0, "密码修改失败", nil)
+		log.Println("密码修改失败：", err.Error())
+	} else {
+		adminPasswd = newPasswd
+		f.Write([]byte(adminPasswd))
+		OutputJson(w, 0, "密码修改成功", nil)
+	}
+
 }
 
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
