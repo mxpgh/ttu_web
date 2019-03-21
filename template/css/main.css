@@ -1,15 +1,15 @@
 body{
-    background-color:#ffffff;
+    background-color:#00524B;
     padding:0px;
     margin:0px;
     font-size:14px;
+    color: #f1f1f1;
     min-height:100px !important;
     max-height: 1000000px;
     overflow: auto !important;
     -webkit-user-select:text !important;
 }
 
-/*ͷ����ʽ*/
 .head {
     width:90%;
     height: 70px;
@@ -46,7 +46,6 @@ body{
     overflow-y: hidden;
 }
 
-/*������������*/
 .content{
     clear:both;
     width:90%;
@@ -55,40 +54,36 @@ body{
     padding-top:10px;
 }
 
-/*��߲˵�*/
 .left_menu{
     float:left;
     width:300px;
     border:1px solid #AAA;
     min-height:520px;
+    background-color: cadetblue;
 }
 
-/*�˵��е�ÿһ��---δѡ��*/
 .label{
     padding:10px;
+    background-color: cadetblue;
 }
 
-/*�˵��е�ÿһ��---��ѡ��*/
 .labeled{
     padding:10px;
     background-color:#f1f1f1;
 }
 
-/*�˵��е�ÿһ������---δѡ��*/
 a.label:link,a.label:visited {
     color:#434343;
     font-size:14px;
     text-decoration:none;
 }
 
-/*�˵��е�ÿһ��---��ѡ��*/
 a.labeled:link,a.labeled:visited {
     color:#000000;
     font-size:14px;
     text-decoration:none;
 }
 
-/*�������ݣ�������ʽ*/
 .right_content{
     margin-left:310px;
     padding:10px;
@@ -114,7 +109,6 @@ a.labeled:link,a.labeled:visited {
     margin-left:-100px ;
 }
 
-/*������ԭ�����е�*/
 .left {
     position:absolute;
     width:10%;
