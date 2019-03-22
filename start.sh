@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ps -ef | grep ttu_web | grep -v grep
+pidof ttu_web
 if [ $? -ne 0 ]
 then
 	echo "start ttu_web ......"

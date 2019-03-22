@@ -1,5 +1,10 @@
 #!/bin/sh
-ps -ef | grep ttu_web | grep -v grep | awk '{print $2}' | xargs kill -9
+
+pid=$(pidof ttu_web)
+if [ $? -eq 0 ] 
+then
+	kill -9 $pid 
+fi
 
 rm -rf ttu_web.log
 echo "ttu_web stopped"
