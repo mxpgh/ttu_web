@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path"
 )
 
 type Status struct {
@@ -29,9 +30,10 @@ type statusController struct {
 }
 
 func (this *statusController) IndexAction(w http.ResponseWriter, r *http.Request, user string) {
-	t, err := template.ParseFiles("template/html/status/index.html")
+	t, err := template.ParseFiles(path.Join(templatePath, "/html/status/index.html"))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	t.Execute(w, &Status{
 		user,

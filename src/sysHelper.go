@@ -117,6 +117,10 @@ func timeTask() {
 	}
 }
 
+func reboot() error {
+	return nil
+}
+
 func getDevType() string {
 	return "TTU"
 }

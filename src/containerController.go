@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path"
 )
 
 type CTItem struct {
@@ -22,9 +23,10 @@ type containerController struct {
 }
 
 func (this *containerController) IndexAction(w http.ResponseWriter, r *http.Request, user string) {
-	t, err := template.ParseFiles("template/html/container/index.html")
+	t, err := template.ParseFiles(path.Join(templatePath, "/html/container/index.html"))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	var ctList []CTItem

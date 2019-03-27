@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path"
 )
 
 type Basic struct {
@@ -33,9 +34,10 @@ type basicController struct {
 }
 
 func (this *basicController) IndexAction(w http.ResponseWriter, r *http.Request, user string) {
-	t, err := template.ParseFiles("template/html/basic/index.html")
+	t, err := template.ParseFiles(path.Join(templatePath, "/html/basic/index.html"))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	t.Execute(w, &Basic{

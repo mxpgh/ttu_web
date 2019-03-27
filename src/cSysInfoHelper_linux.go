@@ -129,6 +129,11 @@ func timeTask() {
 	}
 }
 
+func reboot() error {
+	C.reboot()
+	return nil
+}
+
 func getDevType() string {
 	inlen := C.int(128)
 	buf := make([]byte, 128)
@@ -341,7 +346,7 @@ func getDockerStat() (cpu, mem string, dL []dockerStat) {
 	return
 }
 
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 func setMainStationIPv4(ip string, port string) error {
 	cs := C.CString(ip)
 	pt, _ := strconv.Atoi(port)
@@ -381,7 +386,7 @@ func getBackMainStationIPv4() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
-///////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 func setMainStationIPv6(ip string, port string) error {
 	cs := C.CString(ip)
 	pt, _ := strconv.Atoi(port)
@@ -422,7 +427,7 @@ func getBackMainStationIPv6() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
-//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 func setOPSMainStationIPv4(ip string, port string) error {
 	cs := C.CString(ip)
 	pt, _ := strconv.Atoi(port)
@@ -462,7 +467,7 @@ func getBackOPSMainStationIPv4() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
-///////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func setOPSMainStationIPv6(ip string, port string) error {
 	cs := C.CString(ip)
 	pt, _ := strconv.Atoi(port)
@@ -503,7 +508,7 @@ func getBackOPSMainStationIPv6() (ip string, port uint16) {
 	return byteToString(cIp), uint16(cPort)
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 func getLocalIPv4() string {
 	return "192.168.1.12"
 }
@@ -568,7 +573,7 @@ func setLocalIPv6DNS(dns string) error {
 	return nil
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //set system current time
 func setSysCurTime(tm string) error {
 	cs := C.CString(tm)

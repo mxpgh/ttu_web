@@ -371,6 +371,12 @@ func (this *ajaxController) PasswdAction(w http.ResponseWriter, r *http.Request)
 
 }
 
+func (this *ajaxController) SysmgrAction(w http.ResponseWriter, r *http.Request) {
+	log.Println("SysmgrAction")
+	reboot()
+	OutputJson(w, 1, "正在重启", nil)
+}
+
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
 	out := &Result{ret, reason, i}
 	b, err := json.Marshal(out)

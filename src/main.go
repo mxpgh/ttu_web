@@ -8,11 +8,15 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
+
+var templatePath string
 
 func main() {
 
@@ -34,8 +38,10 @@ func main() {
 		WriteTimeout: 60 * time.Second,
 	}
 
-	http.Handle("/css/", http.FileServer(http.Dir("template")))
-	http.Handle("/js/", http.FileServer(http.Dir("template")))
+	templatePath = path.Join(getCurrentDirectory(), "template")
+	log.Println(templatePath)
+	http.Handle("/css/", http.FileServer(http.Dir(templatePath)))
+	http.Handle("/js/", http.FileServer(http.Dir(templatePath)))
 
 	http.HandleFunc("/admin/", adminHandler)
 	http.HandleFunc("/login/", loginHandler)
@@ -46,9 +52,18 @@ func main() {
 	http.HandleFunc("/upload/", uploadHandler)
 	http.HandleFunc("/container/", containerHandler)
 	http.HandleFunc("/passwd/", passwdHandler)
+	http.HandleFunc("/sysmgr/", sysmgrHandler)
 	http.HandleFunc("/", NotFoundHandler)
 	log.Println("Start ttu_web server: listen port 8888")
 	log.Fatal(httpSrv.ListenAndServe())
+}
+
+func getCurrentDirectory() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return strings.Replace(dir, "\\", "/", -1)
 }
 
 func execBashCmd(bash string) string {

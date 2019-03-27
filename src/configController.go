@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path"
 )
 
 type Config struct {
@@ -59,9 +60,10 @@ type configController struct {
 }
 
 func (this *configController) IndexAction(w http.ResponseWriter, r *http.Request, user string) {
-	t, err := template.ParseFiles("template/html/config/index.html")
+	t, err := template.ParseFiles(path.Join(templatePath, "/html/config/index.html"))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	tempLower, tempUpper := getTemperatureThreshold()

@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path"
 	"reflect"
 	"strings"
 )
@@ -254,14 +255,43 @@ func passwdHandler(w http.ResponseWriter, r *http.Request) {
 	method.Call([]reflect.Value{responseValue, requestValue, userValue})
 }
 
+func sysmgrHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("sysmgrHandler")
+	// 获取cookie
+	cookie, err := r.Cookie("admin_name")
+	if err != nil || cookie.Value == "" {
+		http.Redirect(w, r, "/login/index", http.StatusFound)
+		return
+	}
+
+	pathInfo := strings.Trim(r.URL.Path, "/")
+	parts := strings.Split(pathInfo, "/")
+	var action = ""
+	if len(parts) > 1 {
+		action = strings.Title(parts[1]) + "Action"
+	}
+
+	sysmgr := &sysmgrController{}
+	controller := reflect.ValueOf(sysmgr)
+	method := controller.MethodByName(action)
+	if !method.IsValid() {
+		method = controller.MethodByName(strings.Title("index") + "Action")
+	}
+	requestValue := reflect.ValueOf(r)
+	responseValue := reflect.ValueOf(w)
+	userValue := reflect.ValueOf(cookie.Value)
+	method.Call([]reflect.Value{responseValue, requestValue, userValue})
+}
+
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		http.Redirect(w, r, "/login/index", http.StatusFound)
 	}
 
-	t, err := template.ParseFiles("template/html/404.html")
+	t, err := template.ParseFiles(path.Join(templatePath, "/html/404.html"))
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	t.Execute(w, nil)
 }
