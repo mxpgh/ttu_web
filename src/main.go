@@ -27,6 +27,13 @@ func main() {
 			adminPasswd = string(passwd[:l])
 		}
 	}
+
+	httpSrv := &http.Server{
+		Addr:         ":8888",
+		ReadTimeout:  60 * time.Second,
+		WriteTimeout: 60 * time.Second,
+	}
+
 	http.Handle("/css/", http.FileServer(http.Dir("template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
 
@@ -41,7 +48,7 @@ func main() {
 	http.HandleFunc("/passwd/", passwdHandler)
 	http.HandleFunc("/", NotFoundHandler)
 	log.Println("Start ttu_web server: listen port 8888")
-	log.Fatal(http.ListenAndServe(":8888", nil))
+	log.Fatal(httpSrv.ListenAndServe())
 }
 
 func execBashCmd(bash string) string {
