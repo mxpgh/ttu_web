@@ -227,6 +227,41 @@ func containerHandler(w http.ResponseWriter, r *http.Request) {
 	method.Call([]reflect.Value{responseValue, requestValue, userValue})
 }
 
+func logHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("logHandler")
+	// 获取cookie
+	cookie, err := r.Cookie("admin_name")
+	if err != nil || cookie.Value == "" {
+		http.Redirect(w, r, "/login/index", http.StatusFound)
+		return
+	}
+
+	r.ParseForm()
+	page := r.FormValue("page")
+	if page == "" {
+		page = "0"
+	}
+	log.Println("page: ", page)
+	pathInfo := strings.Trim(r.URL.Path, "/")
+	parts := strings.Split(pathInfo, "/")
+	var action = ""
+	if len(parts) > 1 {
+		action = strings.Title(parts[1]) + "Action"
+	}
+
+	log := &logController{}
+	controller := reflect.ValueOf(log)
+	method := controller.MethodByName(action)
+	if !method.IsValid() {
+		method = controller.MethodByName(strings.Title("index") + "Action")
+	}
+	requestValue := reflect.ValueOf(r)
+	responseValue := reflect.ValueOf(w)
+	userValue := reflect.ValueOf(cookie.Value)
+	pageValue := reflect.ValueOf(page)
+	method.Call([]reflect.Value{responseValue, requestValue, userValue, pageValue})
+}
+
 func passwdHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("passwdHandler")
 	// 获取cookie

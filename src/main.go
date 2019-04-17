@@ -51,6 +51,7 @@ func main() {
 	http.HandleFunc("/status/", statusHandler)
 	http.HandleFunc("/upload/", uploadHandler)
 	http.HandleFunc("/container/", containerHandler)
+	http.HandleFunc("/log/", logHandler)
 	http.HandleFunc("/passwd/", passwdHandler)
 	http.HandleFunc("/sysmgr/", sysmgrHandler)
 	http.HandleFunc("/", NotFoundHandler)
